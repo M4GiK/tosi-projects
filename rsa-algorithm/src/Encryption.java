@@ -1,10 +1,10 @@
-import java.math.BigInteger;
-
 /**
  * Project RSA Algorithm.
  * Copyright Michał Szczygieł.
  * Created at Feb 24, 2014.
  */
+
+import java.math.BigInteger;
 
 /**
  * This interface describe the basic operation with encryption algorithm.
