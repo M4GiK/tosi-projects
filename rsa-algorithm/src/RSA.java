@@ -1,11 +1,11 @@
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
 /**
  * Project RSA Algorithm.
  * Copyright Michał Szczygieł.
  * Created at Feb 24, 2014.
  */
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 /**
  * This class represents implementation of RSA encryption algorithm.
@@ -16,7 +16,7 @@ import java.security.SecureRandom;
 public class RSA implements Encryption {
 
     /**
-     * The base for the operation.
+     * The constant base for the operation.
      */
     private static final Integer BASE = 27;
 
@@ -59,6 +59,26 @@ public class RSA implements Encryption {
         }
 
         privateKey = publicKey.modInverse(e);
+    }
+
+    /**
+     * This method calculates a numeric translation of the letter block.
+     * 
+     * @param text
+     *            The text to calculate a numeric value.
+     * @param blockSize
+     *            The size of text block.
+     * @return The calculated value for given text.
+     */
+    public Long calculateNumber(String text, Integer blockSize) {
+        // TODO
+        Integer result = 0;
+
+        for (int i = 0; i < blockSize; i++) {
+            result += text.getBytes()[i] * (int) Math.pow(BASE, i);
+        }
+
+        return new Long(result);
     }
 
     /**
@@ -119,6 +139,22 @@ public class RSA implements Encryption {
     private BigInteger euler(BigInteger p, BigInteger q) {
         return (p.subtract(BigInteger.ONE)).multiply((q
                 .subtract(BigInteger.ONE)));
+    }
+
+    /**
+     * This method translate back from given number to block of characters.
+     * 
+     * @param number
+     *            The number to translate.
+     * @param blockSize
+     *            The size of text block.
+     * @return The translated number to string.
+     */
+    public String translateToString(Long number, Integer blockSize) {
+        // TODO
+        String result = "";
+
+        return result;
     }
 
 }
