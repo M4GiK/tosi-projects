@@ -24,6 +24,15 @@ public interface Encryption {
     public BigInteger decrypt(BigInteger valueToDecrypt);
 
     /**
+     * This method makes operation to achieve decrypted message.
+     * 
+     * @param messageToDecrypt
+     *            The message of which will be performed the decryption process.
+     * @return Decrypted message.
+     */
+    public String decrypt(String messageToDecrypt);
+
+    /**
      * This method makes operation to create encrypted message.
      * 
      * @param valueToEncrypt
@@ -31,5 +40,14 @@ public interface Encryption {
      * @return Encrypted value.
      */
     public BigInteger encrypt(BigInteger valueToEncrypt);
+
+    /**
+     * This method makes operation to create encrypted message.
+     * 
+     * @param messageToEncrypt
+     *            The message of which will be performed the encryption process
+     * @return Encrypted message.
+     */
+    public String encrypt(String messageToEncrypt);
 
 }
