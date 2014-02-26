@@ -1,3 +1,9 @@
+/**
+ * Project RSA Algorithm.
+ * Copyright Michał Szczygieł.
+ * Created at Feb 25, 2014.
+ */
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -5,12 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-/**
- * Project RSA Algorithm.
- * Copyright Michał Szczygieł.
- * Created at Feb 25, 2014.
- */
 
 /**
  * 
@@ -23,22 +23,47 @@ import java.io.OutputStream;
 public class IOOperations {
 
     /**
-     * Object to keep instance of RSA.
+     * This method encrypt given stream, using {@link RSA} object.
+     * 
+     * @param inputStream
+     *            The {@link InputStream} with data to encrypt.
+     * @param rsa
+     *            The instance of {@link RSA} encryption.
+     */
+    public static void encryptStream(InputStream inputStream, RSA rsa) {
+
+    }
+
+    /**
+     * Object to keep instance of {@link RSA}.
      */
     private RSA rsa;
 
     /**
+     * The constructor for {@link IOOperations}, which crate instance of this
+     * class.
      * 
      * @param rsa
+     *            The instance of {@link RSA} encryption.
      */
     public IOOperations(RSA rsa) {
         this.setRsa(rsa);
     }
 
     /**
-     * This method gets RSA instance.
+     * This method encrypt given stream, using {@link RSA} object.
      * 
-     * @return the RSA instance.
+     * @param inputStream
+     *            The {@link InputStream} with data to encrypt.
+     */
+    public void encryptStream(InputStream inputStream) {
+
+    }
+
+    /**
+     * This method gets {@link RSA} instance.
+     * 
+     * @return the {@link RSA} instance.
      */
     public RSA getRsa() {
         return rsa;
@@ -64,10 +89,10 @@ public class IOOperations {
     }
 
     /**
-     * This method sets RSA instance.
+     * This method sets {@link RSA} instance.
      * 
      * @param rsa
-     *            The RSA to set
+     *            The {@link RSA} to set
      */
     public void setRsa(RSA rsa) {
         this.rsa = rsa;
