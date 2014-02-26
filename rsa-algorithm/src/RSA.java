@@ -21,6 +21,11 @@ public class RSA implements Encryption {
     private static final Integer BASE = 27;
 
     /**
+     * The default value for fragmentation data.
+     */
+    public static final Integer BLOCK_SIZE = 10;
+
+    /**
      * Field keeps the value of the multiplication of numbers p and q.
      */
     private BigInteger n;
