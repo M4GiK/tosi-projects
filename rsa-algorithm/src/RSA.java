@@ -71,11 +71,10 @@ public class RSA implements Encryption {
      * @return The calculated value for given text.
      */
     public Long calculateNumber(String text, Integer blockSize) {
-        // TODO
-        Integer result = 0;
+        Long result = 0L;
 
         for (int i = 0; i < blockSize; i++) {
-            result += text.getBytes()[i] * (int) Math.pow(BASE, i);
+            result += (text.getBytes()[i] - 'a') * (long) Math.pow(BASE, i);
         }
 
         return new Long(result);
@@ -154,7 +153,12 @@ public class RSA implements Encryption {
         // TODO
         String result = "";
 
-        return result;
-    }
+        for (int i = blockSize; i > 0; i--) {
+            Character character = (char) ('a' + (number / Math.pow(BASE, i)));
+            number -= (long) ((number / Math.pow(BASE, i)) * Math.pow(BASE, i));
+            result += character;
+        }
 
+        return new StringBuffer(result).reverse().toString();
+    }
 }
