@@ -26,6 +26,12 @@ public class RSA implements Encryption {
     public static final Integer BLOCK_SIZE = 10;
 
     /**
+     * The padding character, if block data is smaller then block size should be
+     * filled by this value.
+     */
+    public static final Character PADDING = 'z' + 1;
+
+    /**
      * Field keeps the value of the multiplication of numbers p and q.
      */
     private BigInteger n;

@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -34,16 +35,22 @@ public class IOOperations {
             .getName());
 
     /**
-     * This method clears given parameters.
+     * This method makes process of encryption for given stream data.
      * 
-     * @param allStream
-     *            The stream to clear.
-     * @param buffer
-     *            The buffer to clear.
+     * @param rsa
+     *            The {@link RSA} instance.
+     * @param stream
+     *            The stream of data to encrypt.
+     * @param blockSize
+     *            The size for block of data to encrypt.
+     * @return The encrypted data as byte array.
      */
-    private static void clearStreamBuffer(String allStream, Integer buffer) {
-        allStream = "";
-        buffer = 0;
+    private static byte[] encryptedData(RSA rsa, String stream,
+            Integer blockSize) {
+        Long number = rsa.calculateNumber(stream, blockSize);
+        BigInteger encrypted = rsa.encrypt(new BigInteger(number.toString()));
+
+        return encrypted.toByteArray();
     }
 
     /**
@@ -71,15 +78,22 @@ public class IOOperations {
                 allStream += code;
 
                 if (++buffer == blockSize) {
-                    BigInteger encrypted = rsa.encrypt(new BigInteger(rsa
-                            .calculateNumber(allStream, blockSize).toString()));
-                    outputStream.write(encrypted.toByteArray());
-                    clearStreamBuffer(allStream, buffer);
+                    outputStream
+                            .write(encryptedData(rsa, allStream, blockSize));
+                    allStream = "";
+                    buffer = 0;
                 }
 
             } else {
+
+                if (buffer != 0) {
+                    allStream = StringUtils.rightPad(allStream, blockSize,
+                            RSA.PADDING);
+                    outputStream
+                            .write(encryptedData(rsa, allStream, blockSize));
+                }
+
                 encrytping = false;
-                logger.info(buffer);
             }
 
         }
@@ -107,7 +121,7 @@ public class IOOperations {
     }
 
     /**
-     * 
+     * The size for fragmentation data.
      */
     private Integer blockSize = RSA.BLOCK_SIZE;
 
@@ -132,6 +146,19 @@ public class IOOperations {
      */
     public IOOperations(RSA rsa) {
         this.setRsa(rsa);
+    }
+
+    /**
+     * This method clears given parameters.
+     * 
+     * @param allStream
+     *            The stream to clear.
+     * @param buffer
+     *            The buffer to clear.
+     */
+    private void clearStreamBuffer(String allStream, Integer buffer) {
+        allStream = "";
+        buffer = 0;
     }
 
     /**
