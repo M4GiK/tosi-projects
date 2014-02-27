@@ -14,6 +14,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 /**
  * 
  * This class is responsible for safe operations on files. This class contain
@@ -23,6 +26,12 @@ import java.math.BigInteger;
  * 
  */
 public class IOOperations {
+
+    /**
+     * This logger is responsible for the registration of events.
+     */
+    static final Logger logger = LogManager.getLogger(IOOperations.class
+            .getName());
 
     /**
      * This method clears given parameters.
@@ -70,11 +79,31 @@ public class IOOperations {
 
             } else {
                 encrytping = false;
+                logger.info(buffer);
             }
 
         }
 
         return outputStream;
+    }
+
+    /**
+     * This method reads file from given directory.
+     * 
+     * @param filePath
+     *            The directory for file.
+     * @return The {@link InputStream} for read file.
+     * @throws IOException
+     */
+    public static InputStream readFile(String filePath) throws IOException {
+        InputStream InputStream = null;
+        File file = new File(filePath);
+
+        if (file.exists()) {
+            InputStream = new FileInputStream(file);
+        }
+
+        return InputStream;
     }
 
     /**
@@ -131,25 +160,6 @@ public class IOOperations {
      */
     public RSA getRsa() {
         return rsa;
-    }
-
-    /**
-     * This method reads file from given directory.
-     * 
-     * @param filePath
-     *            The directory for file.
-     * @return The {@link InputStream} for read file.
-     * @throws IOException
-     */
-    public InputStream readFile(String filePath) throws IOException {
-        InputStream InputStream = null;
-        File file = new File(filePath);
-
-        if (file.exists()) {
-            InputStream = new FileInputStream(file);
-        }
-
-        return InputStream;
     }
 
     /**
