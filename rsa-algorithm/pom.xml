@@ -10,7 +10,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<log4j.properties.directory>src/main/java</log4j.properties.directory>
+		<log4j.properties.directory>src</log4j.properties.directory>
 	</properties>
 
 	<repositories>
