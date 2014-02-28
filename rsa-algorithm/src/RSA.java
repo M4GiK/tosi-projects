@@ -73,25 +73,6 @@ public class RSA implements Encryption {
     }
 
     /**
-     * This method calculates a numeric translation of the letter block.
-     * 
-     * @param text
-     *            The text to calculate a numeric value.
-     * @param blockSize
-     *            The size of text block.
-     * @return The calculated value for given text.
-     */
-    public Long calculateNumber(String text, Integer blockSize) {
-        Long result = 0L;
-
-        for (int i = 0; i < blockSize; i++) {
-            result += (text.getBytes()[i] - 'a') * (long) Math.pow(BASE, i);
-        }
-
-        return new Long(result);
-    }
-
-    /**
      * This method makes operation to achieve decrypted message.
      * 
      * @param valueToDecrypt
@@ -152,6 +133,25 @@ public class RSA implements Encryption {
     }
 
     /**
+     * This method calculates a numeric translation of the letter block.
+     * 
+     * @param text
+     *            The text to calculate a numeric value.
+     * @param blockSize
+     *            The size of text block.
+     * @return The calculated value for given text.
+     */
+    public Long translateToLong(String text, Integer blockSize) {
+        Long result = 0L;
+
+        for (int i = 0; i < blockSize; i++) {
+            result += (text.charAt(i) - 'a') * (long) Math.pow(BASE, i);
+        }
+
+        return result;
+    }
+
+    /**
      * This method translate back from given number to block of characters.
      * 
      * @param number
@@ -161,13 +161,16 @@ public class RSA implements Encryption {
      * @return The translated number to string.
      */
     public String translateToString(Long number, Integer blockSize) {
-        // TODO
         String result = "";
 
-        for (int i = blockSize; i > 0; i--) {
+        for (int i = blockSize - 1; i >= 0; i--) {
             Character character = (char) ('a' + (number / Math.pow(BASE, i)));
-            number -= (long) ((number / Math.pow(BASE, i)) * Math.pow(BASE, i));
-            result += character;
+            number -= (long) (number / Math.pow(BASE, i))
+                    * (long) Math.pow(BASE, i);
+
+            if (!character.equals(PADDING)) {
+                result += character;
+            }
         }
 
         return new StringBuffer(result).reverse().toString();
