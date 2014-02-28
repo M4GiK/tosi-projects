@@ -12,7 +12,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigInteger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
@@ -35,6 +34,80 @@ public class IOOperations {
             .getName());
 
     /**
+     * The constant value represents the character to separate blocks.
+     */
+    private final static String SEPARATOR = "~";
+
+    /**
+     * This method clears given parameter.
+     * 
+     * @param data
+     *            The data to clear
+     * @return Cleared data.
+     */
+    private static Object clearStreamBuffer(Object data) {
+        Object clear = null;
+
+        if (data instanceof Integer) {
+            clear = 0;
+        }
+
+        if (data instanceof String) {
+            clear = "";
+        }
+
+        return clear;
+    }
+
+    /**
+     * This method makes process of decryption for given stream data.
+     * 
+     * @param rsa
+     *            The {@link RSA} instance.
+     * @param stream
+     *            The stream of data to decrypt.
+     * @param blockSize
+     *            The size for block of data to decrypt.
+     * @return The decrypted data as byte array.
+     */
+    private static byte[] decryptedData(RSA rsa, String streamBlock,
+            Integer blockSize) {
+        String decrypted = rsa.decrypt(streamBlock);
+        Long number = Long.parseLong(decrypted);
+
+        return rsa.translateToString(number, blockSize).getBytes();
+    }
+
+    /**
+     * This method makes process of decryption for given stream data.
+     * 
+     * @param outputStream
+     *            The {@link OutputStream} with data to encrypt.
+     * @param rsa
+     *            The instance of {@link RSA} encryption.
+     * @param blockSize
+     *            The size of block for fragmentation data.
+     * @return The decrypted data as {@link OutputStream}.
+     * @throws IOException
+     */
+    public static OutputStream decryptStream(OutputStream outputStream,
+            RSA rsa, Integer blockSize) throws IOException {
+        OutputStream decryptedStream = new ByteArrayOutputStream();
+        String allStream = "";
+
+        if ((allStream = outputStream.toString()).length() != 0) {
+            String[] encrypted = allStream.split(SEPARATOR.toString());
+
+            for (String streamBlock : encrypted) {
+                decryptedStream
+                        .write(decryptedData(rsa, streamBlock, blockSize));
+            }
+        }
+
+        return decryptedStream;
+    }
+
+    /**
      * This method makes process of encryption for given stream data.
      * 
      * @param rsa
@@ -47,10 +120,10 @@ public class IOOperations {
      */
     private static byte[] encryptedData(RSA rsa, String stream,
             Integer blockSize) {
-        Long number = rsa.calculateNumber(stream, blockSize);
-        BigInteger encrypted = rsa.encrypt(new BigInteger(number.toString()));
+        Long number = rsa.translateToLong(stream, blockSize);
+        String encrypted = rsa.encrypt(number.toString());
 
-        return encrypted.toByteArray();
+        return encrypted.getBytes();
     }
 
     /**
@@ -63,6 +136,8 @@ public class IOOperations {
      * 
      * @param blockSize
      *            The size of block for fragmentation data.
+     * @return The encrypted data as {@link OutputStream}.
+     * @throws IOException
      */
     public static OutputStream encryptStream(InputStream inputStream, RSA rsa,
             Integer blockSize) throws IOException {
@@ -70,18 +145,20 @@ public class IOOperations {
         Boolean encrytping = true;
         String allStream = "";
         Integer buffer = 0;
-        Integer code = 0;
+        int code = 0;
 
         while (encrytping) {
 
             if ((code = inputStream.read()) != -1) {
-                allStream += code;
+                allStream += (char) code;
 
                 if (++buffer == blockSize) {
                     outputStream
                             .write(encryptedData(rsa, allStream, blockSize));
-                    allStream = "";
-                    buffer = 0;
+                    outputStream.write(separatorToByte(SEPARATOR));
+                    logger.info(outputStream.toString());
+                    allStream = (String) clearStreamBuffer(allStream);
+                    buffer = (Integer) clearStreamBuffer(buffer);
                 }
 
             } else {
@@ -121,6 +198,17 @@ public class IOOperations {
     }
 
     /**
+     * This method gets byte array of given character.
+     * 
+     * @param character
+     *            The character to separate blocks.
+     * @return The byte array of given character.
+     */
+    private static byte[] separatorToByte(String character) {
+        return character.getBytes();
+    }
+
+    /**
      * The size for fragmentation data.
      */
     private Integer blockSize = RSA.BLOCK_SIZE;
@@ -149,26 +237,48 @@ public class IOOperations {
     }
 
     /**
-     * This method clears given parameters.
-     * 
-     * @param allStream
-     *            The stream to clear.
-     * @param buffer
-     *            The buffer to clear.
-     */
-    private void clearStreamBuffer(String allStream, Integer buffer) {
-        allStream = "";
-        buffer = 0;
-    }
-
-    /**
      * This method encrypt given stream, using {@link RSA} object.
      * 
      * @param inputStream
      *            The {@link InputStream} with data to encrypt.
+     * @throws IOException
      */
-    public void encryptStream(InputStream inputStream) {
+    public OutputStream encryptStream(InputStream inputStream)
+            throws IOException {
+        OutputStream outputStream = new ByteArrayOutputStream();
+        Boolean encrytping = true;
+        String allStream = "";
+        Integer buffer = 0;
+        int code = 0;
 
+        while (encrytping) {
+
+            if ((code = inputStream.read()) != -1) {
+                allStream += (char) code;
+
+                if (++buffer == blockSize) {
+                    outputStream
+                            .write(encryptedData(rsa, allStream, blockSize));
+                    outputStream.write(separatorToByte(SEPARATOR));
+                    allStream = (String) clearStreamBuffer(allStream);
+                    buffer = (Integer) clearStreamBuffer(buffer);
+                }
+
+            } else {
+
+                if (buffer != 0) {
+                    allStream = StringUtils.rightPad(allStream, blockSize,
+                            RSA.PADDING);
+                    outputStream
+                            .write(encryptedData(rsa, allStream, blockSize));
+                }
+
+                encrytping = false;
+            }
+
+        }
+
+        return outputStream;
     }
 
     /**
