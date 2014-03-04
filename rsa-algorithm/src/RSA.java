@@ -7,6 +7,9 @@
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 /**
  * This class represents implementation of RSA encryption algorithm.
  * 
@@ -18,12 +21,17 @@ public class RSA implements Encryption {
     /**
      * The constant base for the operation.
      */
-    private static final Integer BASE = 27;
+    private static final Integer BASE = 114;
 
     /**
      * The default value for fragmentation data.
      */
     public static final Integer BLOCK_SIZE = 10;
+
+    /**
+     * This logger is responsible for the registration of events.
+     */
+    static final Logger logger = LogManager.getLogger(RSA.class.getName());
 
     /**
      * The padding character, if block data is smaller then block size should be
@@ -141,11 +149,14 @@ public class RSA implements Encryption {
      *            The size of text block.
      * @return The calculated value for given text.
      */
-    public Long translateToLong(String text, Integer blockSize) {
-        Long result = 0L;
+    public BigInteger translateToBigInteger(String text, Integer blockSize) {
+        BigInteger result = BigInteger.ZERO;
 
         for (int i = 0; i < blockSize; i++) {
-            result += (text.charAt(i) - 'a') * (long) Math.pow(BASE, i);
+            BigInteger asciiCode = new BigInteger(Integer.toString(text
+                    .charAt(i) - '\n'));
+            BigInteger exponent = new BigInteger(BASE.toString()).pow(i);
+            result = result.add(asciiCode.multiply(exponent));
         }
 
         return result;
@@ -160,19 +171,37 @@ public class RSA implements Encryption {
      *            The size of text block.
      * @return The translated number to string.
      */
-    public String translateToString(Long number, Integer blockSize) {
+    public String translateToString(BigInteger number, Integer blockSize) {
         String result = "";
 
-        for (int i = blockSize - 1; i >= 0; i--) {
-            Character character = (char) ('a' + (number / Math.pow(BASE, i)));
-            number -= (long) (number / Math.pow(BASE, i))
-                    * (long) Math.pow(BASE, i);
+        // Translate in correct way.
+        for (int i = 0; i < blockSize; i++) {
+            BigInteger exponent = new BigInteger(BASE.toString()).pow(i);
+            BigInteger digit = number.divide(exponent);
+            BigInteger rest = digit.mod(new BigInteger(BASE.toString()));
+            Character character = (char) (rest.intValue() + '\n');
+            number = number.subtract(rest);
 
-            if (!character.equals(PADDING)) {
+            if (!(character == PADDING)) {
                 result += character;
             }
         }
 
-        return new StringBuffer(result).reverse().toString();
+        return result;
+
+        // Translate in backward way.
+        // for (int i = blockSize - 1; i >= 0; i--) {
+        // BigInteger exponent = new BigInteger(BASE.toString()).pow(i);
+        // BigInteger digit = number.divide(exponent);
+        //
+        // Character character = (char) ('\n' + digit.intValue());
+        // number = number.subtract(digit.multiply(exponent));
+        //
+        // if (!(character == PADDING)) {
+        // result += character;
+        // }
+        // }
+
+        // return new StringBuffer(result).reverse().toString();
     }
 }

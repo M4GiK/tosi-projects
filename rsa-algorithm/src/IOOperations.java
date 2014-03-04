@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
@@ -73,7 +74,7 @@ public class IOOperations {
     private static byte[] decryptedData(RSA rsa, String streamBlock,
             Integer blockSize) {
         String decrypted = rsa.decrypt(streamBlock);
-        Long number = Long.parseLong(decrypted);
+        BigInteger number = new BigInteger(decrypted);
 
         return rsa.translateToString(number, blockSize).getBytes();
     }
@@ -120,7 +121,7 @@ public class IOOperations {
      */
     private static byte[] encryptedData(RSA rsa, String stream,
             Integer blockSize) {
-        Long number = rsa.translateToLong(stream, blockSize);
+        BigInteger number = rsa.translateToBigInteger(stream, blockSize);
         String encrypted = rsa.encrypt(number.toString());
 
         return encrypted.getBytes();
