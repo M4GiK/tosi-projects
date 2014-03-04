@@ -35,18 +35,22 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        loggerSetup();
-        RSA rsa = new RSA(1024);
+        if (args.length == 1) {
+            loggerSetup();
+            RSA rsa = new RSA(1024);
 
-        try {
-            OutputStream encryptedStream = IOOperations.encryptStream(
-                    IOOperations.readFile("data.txt"), rsa, RSA.BLOCK_SIZE);
-            logger.info(encryptedStream.toString());
-            logger.info(IOOperations.decryptStream(encryptedStream, rsa,
-                    RSA.BLOCK_SIZE));
-        } catch (IOException e) {
-            logger.debug(e);
-            logger.error(e);
+            try {
+                OutputStream encryptedStream = IOOperations.encryptStream(
+                        IOOperations.readFile(args[0]), rsa, RSA.BLOCK_SIZE);
+                logger.info(encryptedStream.toString());
+                logger.info(IOOperations.decryptStream(encryptedStream, rsa,
+                        RSA.BLOCK_SIZE));
+            } catch (IOException e) {
+                logger.debug(e);
+                logger.error(e);
+            }
+        } else {
+            logger.warn("The application needs 1 argument as file to encrypt");
         }
     }
 
