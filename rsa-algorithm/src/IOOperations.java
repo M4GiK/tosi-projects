@@ -157,7 +157,7 @@ public class IOOperations {
                     outputStream
                             .write(encryptedData(rsa, allStream, blockSize));
                     outputStream.write(separatorToByte(SEPARATOR));
-                    logger.info(outputStream.toString());
+
                     allStream = (String) clearStreamBuffer(allStream);
                     buffer = (Integer) clearStreamBuffer(buffer);
                 }
