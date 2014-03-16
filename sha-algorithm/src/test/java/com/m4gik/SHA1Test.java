@@ -10,6 +10,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.security.spec.InvalidParameterSpecException;
+
 import org.junit.Test;
 
 /**
@@ -31,11 +33,23 @@ public class SHA1Test {
      */
     @Test
     public void checkCorrectnessOfSHA1() throws Exception {
-        // given
-        SHA1 sha1 = new SHA1();
         // when
-        String result = sha1.hash(EXAMPLE_TEXT);
+        String result = SHA1.hash(EXAMPLE_TEXT);
         // then
         assertThat(result, is(equalTo(HASHED_EXAMPLE_TEXT)));
+    }
+
+    /**
+     * This test method checks SHA1 algorithm for given string, and this method
+     * shouldn't return exeption
+     * 
+     * @throws Exception
+     */
+    @Test(
+            expected = InvalidParameterSpecException.class)
+    public void dataShouldBeMultipleOf64() throws Exception {
+        // when
+        SHA1.checkData(EXAMPLE_TEXT.getBytes());
+        // then ... throw new Exception
     }
 }
