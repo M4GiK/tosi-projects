@@ -23,7 +23,7 @@ import org.junit.Test;
 public class SHA1Test {
 
     private static final String EXAMPLE_TEXT = "The quick brown fox jumps over the lazy dog";
-    private static final String HASHED_EXAMPLE_TEXT = "2fd4e1c6 7a2d28fc ed849ee1 bb76e739 1b93eb12";
+    private static final String HASHED_EXAMPLE_TEXT = "2fd4e1c67a2d28fced849ee1bb76e7391b93eb12";
 
     /**
      * This test method checks SHA1 algorithm for given string, which should be
