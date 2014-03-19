@@ -21,6 +21,10 @@ import org.junit.Test;
  */
 public class ElGamalTest {
 
+    private static final String EXAMPLE_TEXT = "The quick brown fox jumps over the lazy dog";
+
+    private static final String SECRET_KEY = "12345678901234567890";
+
     /**
      * This test method checks if ElGamal algorithm proper sign the document.
      * 
@@ -29,9 +33,9 @@ public class ElGamalTest {
     @Test
     public void isSigned() throws Exception {
         // given
-        ElGamal elGamal = new ElGamal();
+        ElGamal elGamal = new ElGamal(SECRET_KEY);
         // when
-        Boolean isSigned = elGamal.sign();
+        Boolean isSigned = elGamal.sign(EXAMPLE_TEXT);
         // then
         assertThat(isSigned, is(equalTo(true)));
     }
@@ -45,11 +49,11 @@ public class ElGamalTest {
     @Test
     public void isVerfied() throws Exception {
         // given
-        ElGamal elGamal = new ElGamal();
+        ElGamal elGamal = new ElGamal(SECRET_KEY);
         // when
         Boolean isVerified = false;
 
-        if (elGamal.sign()) {
+        if (elGamal.sign(SHA1.hash(EXAMPLE_TEXT))) {
             isVerified = elGamal.verify();
         }
 
