@@ -1,5 +1,5 @@
 /**
- * Project RSA Algorithm.
+ * Project SHA1 Algorithm.
  * Copyright Michał Szczygieł.
  * Created at Mar 16, 2014.
  */
