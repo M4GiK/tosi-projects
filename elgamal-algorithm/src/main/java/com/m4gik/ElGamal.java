@@ -19,6 +19,11 @@ import java.util.Random;
 public class ElGamal {
 
     /**
+     * The length for ElGamal key.
+     */
+    private static final int KEY_LENGTH = 64;
+
+    /**
      * The object to code/decode public key.
      */
     private BigInteger alpha;
@@ -61,12 +66,14 @@ public class ElGamal {
      * @param secretKey
      */
     private void generatePublicKey(BigInteger secretKey) {
-        this.p = BigInteger.probablePrime(64, this.secureRandom);
+        this.p = BigInteger.probablePrime(KEY_LENGTH, this.secureRandom);
         this.alpha = new BigInteger(Integer.toString(secureRandom.nextInt()));
         this.publicKey = alpha.modPow(secretKey, p);
     }
 
     /**
+     * This method sets the private key.
+     * 
      * @param secretKey
      */
     private void setPrivateKey(String secretKey) {
@@ -77,16 +84,29 @@ public class ElGamal {
      * 
      * @return
      */
-    public Boolean sign(String message) {
-        // TODO Auto-generated method stub
-        return null;
+    public BigInteger sign(String message) {
+        BigInteger messageToEncrypt = new BigInteger(message, 16);
+        BigInteger k = new BigInteger(KEY_LENGTH, this.secureRandom);
+
+        while (this.p.subtract(BigInteger.ONE).gcd(k).intValue() != 1) {
+            k = new BigInteger(KEY_LENGTH, this.secureRandom);
+        }
+
+        BigInteger r = this.alpha.modPow(k, this.p);
+        BigInteger encryptedMessage = (messageToEncrypt.subtract(this.secretKey
+                .multiply(r))).multiply(k.modInverse(this.p
+                .subtract(BigInteger.ONE)));
+
+        return encryptedMessage;
     }
 
     /**
      * 
+     * @param object
+     * @param bigInteger
      * @return
      */
-    public Boolean verify() {
+    public Boolean verify(BigInteger bigInteger, Object object) {
         // TODO Auto-generated method stub
         return null;
     }
