@@ -8,7 +8,10 @@ package com.m4gik;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
+
+import java.math.BigInteger;
 
 import org.junit.Test;
 
@@ -26,6 +29,26 @@ public class ElGamalTest {
     private static final String SECRET_KEY = "12345678901234567890";
 
     /**
+     * This test method automated the process of testing.
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void automatedTestForElGamalAlgorithm() throws Exception {
+        for (int i = 0; i < 100; i++) {
+            // given
+            ElGamal elGamal = new ElGamal(SECRET_KEY);
+            // when
+            BigInteger encryptedMessage = elGamal.sign(SHA1.hash(EXAMPLE_TEXT));
+            Boolean isVeryfied = elGamal.verify(
+                    elGamal.sign(SHA1.hash(EXAMPLE_TEXT)), null);
+            // then
+            assertThat(encryptedMessage, is(not(equalTo(null))));
+            assertThat(isVeryfied, is(equalTo(true)));
+        }
+    }
+
+    /**
      * This test method checks if ElGamal algorithm proper sign the document.
      * 
      * @throws Exception
@@ -35,9 +58,10 @@ public class ElGamalTest {
         // given
         ElGamal elGamal = new ElGamal(SECRET_KEY);
         // when
-        Boolean isSigned = elGamal.sign(EXAMPLE_TEXT);
+        BigInteger encryptedMessage = elGamal.sign(SHA1.hash(EXAMPLE_TEXT));
         // then
-        assertThat(isSigned, is(equalTo(true)));
+        assertThat(encryptedMessage, is(not(equalTo(null))));
+
     }
 
     /**
@@ -51,13 +75,9 @@ public class ElGamalTest {
         // given
         ElGamal elGamal = new ElGamal(SECRET_KEY);
         // when
-        Boolean isVerified = false;
-
-        if (elGamal.sign(SHA1.hash(EXAMPLE_TEXT))) {
-            isVerified = elGamal.verify();
-        }
-
+        Boolean isVeryfied = elGamal.verify(
+                elGamal.sign(SHA1.hash(EXAMPLE_TEXT)), null);
         // then
-        assertThat(isVerified, is(equalTo(true)));
+        assertThat(isVeryfied, is(equalTo(true)));
     }
 }
