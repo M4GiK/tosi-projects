@@ -96,7 +96,8 @@ public class ElGamal {
         LinkedList<Integer> indexes = new LinkedList<Integer>();
         Integer index = 0;
 
-        for (String string : splitOrginalMessage) {
+        for (@SuppressWarnings("unused")
+        String string : splitOrginalMessage) {
             indexes.add(index++);
         }
 
