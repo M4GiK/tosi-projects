@@ -28,6 +28,12 @@
 			<version>1.9.5</version>
 		</dependency>
 		
+		<dependency>
+		    <groupId>es.usc.citius.common</groupId>
+		    <artifactId>parallel-loops</artifactId>
+		    <version>1.0</version>
+		</dependency>
+		
 	</dependencies>
 	
 </project>
