@@ -11,8 +11,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
-import java.math.BigInteger;
-
 import org.junit.Test;
 
 /**
@@ -26,7 +24,7 @@ public class ElGamalTest {
 
     private static final String EXAMPLE_TEXT = "The quick brown fox jumps over the lazy dog";
 
-    private static final String SECRET_KEY = "12345678901234567890";
+    private static final String SECRET_KEY = "14";
 
     /**
      * This test method automated the process of testing.
@@ -39,9 +37,10 @@ public class ElGamalTest {
             // given
             ElGamal elGamal = new ElGamal(SECRET_KEY);
             // when
-            BigInteger encryptedMessage = elGamal.sign(SHA1.hash(EXAMPLE_TEXT));
+            String encryptedMessage = elGamal.sign(SHA1.hash(EXAMPLE_TEXT));
             Boolean isVeryfied = elGamal.verify(
-                    elGamal.sign(SHA1.hash(EXAMPLE_TEXT)), null);
+                    elGamal.sign(SHA1.hash(EXAMPLE_TEXT)),
+                    elGamal.getValueToVerification(), SHA1.hash(EXAMPLE_TEXT));
             // then
             assertThat(encryptedMessage, is(not(equalTo(null))));
             assertThat(isVeryfied, is(equalTo(true)));
@@ -58,7 +57,7 @@ public class ElGamalTest {
         // given
         ElGamal elGamal = new ElGamal(SECRET_KEY);
         // when
-        BigInteger encryptedMessage = elGamal.sign(SHA1.hash(EXAMPLE_TEXT));
+        String encryptedMessage = elGamal.sign(SHA1.hash(EXAMPLE_TEXT));
         // then
         assertThat(encryptedMessage, is(not(equalTo(null))));
 
@@ -76,7 +75,8 @@ public class ElGamalTest {
         ElGamal elGamal = new ElGamal(SECRET_KEY);
         // when
         Boolean isVeryfied = elGamal.verify(
-                elGamal.sign(SHA1.hash(EXAMPLE_TEXT)), null);
+                elGamal.sign(SHA1.hash(EXAMPLE_TEXT)),
+                elGamal.getValueToVerification(), SHA1.hash(EXAMPLE_TEXT));
         // then
         assertThat(isVeryfied, is(equalTo(true)));
     }
