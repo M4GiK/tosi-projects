@@ -7,7 +7,11 @@ package com.m4gik;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Random;
+
+import es.usc.citius.common.parallel.Parallel;
 
 /**
  * This class represents implementation of ElGamal algorithm. This class contain
@@ -79,6 +83,24 @@ public class ElGamal {
         this.p = BigInteger.probablePrime(KEY_LENGTH, this.secureRandom);
         this.alpha = new BigInteger(Integer.toString(secureRandom.nextInt()));
         this.publicKey = alpha.modPow(secretKey, p);
+    }
+
+    /**
+     * This method gets iterable instance for given array.
+     * 
+     * @param splitOrginalMessage
+     *            The message for wich will be collects indexes.
+     * @return The iterable instance with indexes for given array.
+     */
+    private Iterable<Integer> getIndexes(String[] splitOrginalMessage) {
+        LinkedList<Integer> indexes = new LinkedList<Integer>();
+        Integer index = 0;
+
+        for (String string : splitOrginalMessage) {
+            indexes.add(index++);
+        }
+
+        return indexes;
     }
 
     /**
@@ -177,17 +199,29 @@ public class ElGamal {
      *         false if did not.
      */
     public Boolean verify(String encryptedMessage,
-            BigInteger valueToVerification, String orginalMessage) {
+            final BigInteger valueToVerification, String orginalMessage) {
         Boolean isVeryfied = true;
-        String splitEncryptedMessage[] = encryptedMessage.split(SEPARATOR);
-        String splitOrginalMessage[] = orginalMessage.split("(?!^)");
+        final String splitEncryptedMessage[] = encryptedMessage
+                .split(SEPARATOR);
+        final String splitOrginalMessage[] = orginalMessage.split("(?!^)");
 
-        for (int i = 0; i < splitOrginalMessage.length; i++) {
+        Iterable<Integer> indexes = getIndexes(splitOrginalMessage);
+
+        Collection<Boolean> verifyCollection = Parallel.ForEach(indexes,
+                new Parallel.F<Integer, Boolean>() {
+
+                    public Boolean apply(Integer index) {
+                        return verifyPart(Integer.parseInt(
+                                splitOrginalMessage[index], 16), Integer
+                                .parseInt(splitEncryptedMessage[index]),
+                                valueToVerification);
+                    }
+
+                });
+
+        for (Boolean isVerify : verifyCollection) {
             if (isVeryfied) {
-                isVeryfied = verifyPart(
-                        Integer.parseInt(splitOrginalMessage[i], 16),
-                        Integer.parseInt(splitEncryptedMessage[i]),
-                        valueToVerification);
+                isVeryfied = isVerify;
             }
         }
 
