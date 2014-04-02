@@ -21,7 +21,12 @@ public class ElGamal {
     /**
      * The length for ElGamal key.
      */
-    private static final int KEY_LENGTH = 64;
+    private static final int KEY_LENGTH = 4; // 64
+
+    /**
+     * The separator which separates the given string from another.
+     */
+    private static final String SEPARATOR = "x";
 
     /**
      * The object to code/decode public key.
@@ -37,6 +42,11 @@ public class ElGamal {
      * The variable keeping the public key.
      */
     private BigInteger publicKey;
+
+    /**
+     * The filed to keep value for future verification.
+     */
+    private BigInteger r;
 
     /**
      * The variable keeping the private key.
@@ -72,6 +82,30 @@ public class ElGamal {
     }
 
     /**
+     * This method return value probably prime for k which is relative to p - 1.
+     * 
+     * @return The probably prime value relative to p - 1.
+     */
+    private BigInteger getProbablyPrime() {
+        BigInteger k = new BigInteger(KEY_LENGTH, this.secureRandom);
+
+        while ((this.p.subtract(BigInteger.ONE)).gcd(k).intValue() != 1) {
+            k = new BigInteger(KEY_LENGTH, this.secureRandom);
+        }
+
+        return k;
+    }
+
+    /**
+     * This method gets value for verification of sign.
+     * 
+     * @return the r
+     */
+    public BigInteger getValueToVerification() {
+        return r;
+    }
+
+    /**
      * This method sets the private key.
      * 
      * @param secretKey
@@ -81,34 +115,114 @@ public class ElGamal {
     }
 
     /**
+     * This method sets value to after verification of sign.
      * 
-     * @return
+     * @param r
+     *            the r to set
      */
-    public BigInteger sign(String message) {
-        BigInteger messageToEncrypt = new BigInteger(message, 16);
-        BigInteger k = new BigInteger(KEY_LENGTH, this.secureRandom);
+    public void setValueToVerification(BigInteger r) {
+        this.r = r;
+    }
 
-        while (this.p.subtract(BigInteger.ONE).gcd(k).intValue() != 1) {
-            k = new BigInteger(KEY_LENGTH, this.secureRandom);
+    /**
+     * This method signs the given message using ElGamal algorithm.
+     * 
+     * @param message
+     *            The message to sign.
+     * @return The signed message.
+     */
+    public String sign(String message) {
+        String encryptedMessage = "";
+        String split[] = message.split("(?!^)");
+        BigInteger k = getProbablyPrime();
+        setValueToVerification(this.alpha.modPow(k, this.p));
+
+        for (String string : split) {
+            encryptedMessage += signPart(Integer.parseInt(string, 16), k);
+            encryptedMessage += SEPARATOR;
         }
-
-        BigInteger r = this.alpha.modPow(k, this.p);
-        BigInteger encryptedMessage = (messageToEncrypt.subtract(this.secretKey
-                .multiply(r))).multiply(k.modInverse(this.p
-                .subtract(BigInteger.ONE)));
 
         return encryptedMessage;
     }
 
     /**
+     * This method sing the given part of message to avoid long verify.
      * 
-     * @param object
-     * @param bigInteger
-     * @return
+     * @param partOfMessage
+     *            The part of message to sign
+     * @param k
+     *            The value of k which is probably prime.
+     * @return The part of encrypted and sign message.
      */
-    public Boolean verify(BigInteger bigInteger, Object object) {
-        // TODO Auto-generated method stub
-        return null;
+    private String signPart(Integer partOfMessage, BigInteger k) {
+        BigInteger messageToEncrypt = new BigInteger(partOfMessage.toString());
+        BigInteger encryptedMessage = (messageToEncrypt.subtract(this.secretKey
+                .multiply(getValueToVerification()))).multiply(k
+                .modInverse(this.p.subtract(BigInteger.ONE)));
+
+        return encryptedMessage.toString();
+    }
+
+    /**
+     * This method verifies sign.
+     * 
+     * @param encryptedMessage
+     *            The message which was encrypted.
+     * @param valueToVerification
+     *            The value which allows to identify encrypted message with
+     *            original.
+     * @param orginalMessage
+     *            The original context message to verify with encrypted.
+     * @return True if encrypted message can be verified with original message,
+     *         false if did not.
+     */
+    public Boolean verify(String encryptedMessage,
+            BigInteger valueToVerification, String orginalMessage) {
+        Boolean isVeryfied = true;
+        String splitEncryptedMessage[] = encryptedMessage.split(SEPARATOR);
+        String splitOrginalMessage[] = orginalMessage.split("(?!^)");
+
+        for (int i = 0; i < splitOrginalMessage.length; i++) {
+            if (isVeryfied) {
+                isVeryfied = verifyPart(
+                        Integer.parseInt(splitOrginalMessage[i], 16),
+                        Integer.parseInt(splitEncryptedMessage[i]),
+                        valueToVerification);
+            }
+        }
+
+        return isVeryfied;
+    }
+
+    /**
+     * This method verify the part of message. This performance is to avoid long
+     * verification.
+     * 
+     * @param orginalMessage
+     *            The part of original message, to verify with part of encrypted
+     *            message.
+     * @param encryptedMessage
+     *            The portion of encrypted message.
+     * @param valueToVerification
+     *            The value which allows to identify encrypted message with
+     *            original.
+     * @return True if part of encrypted message can be verified with part of
+     *         original message, false if did not.
+     */
+    private Boolean verifyPart(Integer orginalMessage,
+            Integer encryptedMessage, BigInteger valueToVerification) {
+        Boolean isVeryfied = false;
+
+        BigInteger left = this.alpha.pow(orginalMessage).mod(this.p);
+        BigInteger right = ((publicKey.modPow(valueToVerification, this.p))
+                .multiply(valueToVerification.modPow(new BigInteger(
+                        encryptedMessage.toString()), this.p))).mod(this.p);
+
+        if (left.equals(right)) {
+            isVeryfied = true;
+        }
+
+        return isVeryfied;
     }
 
 }
