@@ -5,6 +5,8 @@ package com.m4gik;
  * <p>
  * A hash (or message digest) algorithm produces its output by iterating a basic
  * compression function on blocks of data.
+ * 
+ * @author Michał Szczygieł <michal.szczygiel@wp.pl>
  */
 public interface IMessageDigest extends Cloneable {
     /**
