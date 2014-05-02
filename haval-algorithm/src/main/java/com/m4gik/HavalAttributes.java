@@ -53,6 +53,11 @@ public class HavalAttributes {
     public static final int HAVAL_5_ROUND = 5;
 
     /**
+     * Name for algorithm.
+     */
+    public static final String HAVAL_HASH = "haval";
+
+    /**
      * The value specify the version of algorithm.
      */
     public static final int HAVAL_VERSION = 1;
