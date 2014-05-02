@@ -2,6 +2,8 @@ package com.m4gik;
 
 /**
  * A base abstract class to facilitate hash implementations.
+ * 
+ * @author Michał Szczygieł <michal.szczygiel@wp.pl>
  */
 public abstract class BaseHash implements IMessageDigest {
     /** The hash (inner) block size in bytes. */
@@ -32,6 +34,9 @@ public abstract class BaseHash implements IMessageDigest {
     protected BaseHash(String name, int hashSize, int blockSize) {
         super();
 
+        checkName(name);
+        checkHashSize(hashSize);
+
         this.name = name;
         this.hashSize = hashSize;
         this.blockSize = blockSize;
@@ -42,6 +47,31 @@ public abstract class BaseHash implements IMessageDigest {
 
     public int blockSize() {
         return blockSize;
+    }
+
+    /**
+     * This method checks the given hash size.
+     * 
+     * @param hashSize
+     *            The hash size to check.
+     */
+    private void checkHashSize(int hashSize) {
+        if (hashSize <= 0) {
+            throw new IllegalArgumentException(
+                    "hashSize cannot less or equal to zero");
+        }
+    }
+
+    /**
+     * This method checks if the given name is proper.
+     * 
+     * @param name
+     *            The name to check.
+     */
+    private void checkName(String name) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("name cannot be null or empty");
+        }
     }
 
     public abstract Object clone();
@@ -64,10 +94,12 @@ public abstract class BaseHash implements IMessageDigest {
     protected abstract byte[] getResult();
 
     public int hashSize() {
+        checkHashSize(hashSize);
         return hashSize;
     }
 
     public String name() {
+        checkName(this.name);
         return name;
     }
 
