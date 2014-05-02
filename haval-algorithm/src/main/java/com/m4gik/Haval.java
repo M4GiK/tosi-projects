@@ -32,12 +32,6 @@ public class Haval extends BaseHash {
     }
 
     @Override
-    public boolean selfTest() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
     protected void transform(byte[] in, int offset) {
         // TODO Auto-generated method stub
 

@@ -62,11 +62,6 @@ public class BaseHashTest {
             }
 
             @Override
-            public boolean selfTest() {
-                return false;
-            }
-
-            @Override
             protected void transform(byte[] in, int offset) {
             }
         }.name(), is(equalTo("Haval")));
@@ -94,11 +89,6 @@ public class BaseHashTest {
 
             @Override
             protected void resetContext() {
-            }
-
-            @Override
-            public boolean selfTest() {
-                return false;
             }
 
             @Override

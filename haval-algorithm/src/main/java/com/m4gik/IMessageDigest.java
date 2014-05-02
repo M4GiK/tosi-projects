@@ -50,15 +50,6 @@ public interface IMessageDigest extends Cloneable {
     void reset();
 
     /**
-     * A basic test. Ensures that the digest of a pre-determined message is
-     * equal to a known pre-computed value.
-     * 
-     * @return <code>true</code> if the implementation passes a basic self-test.
-     *         Returns <code>false</code> otherwise.
-     */
-    boolean selfTest();
-
-    /**
      * Continues a message digest operation using the input byte.
      * 
      * @param b

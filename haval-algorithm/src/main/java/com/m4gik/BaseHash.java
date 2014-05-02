@@ -124,8 +124,6 @@ public abstract class BaseHash implements IMessageDigest {
     /** Resets the instance for future re-use. */
     protected abstract void resetContext();
 
-    public abstract boolean selfTest();
-
     /**
      * The block digest transformation per se.
      * 
