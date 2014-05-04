@@ -25,8 +25,11 @@ public class Haval extends BaseHash {
      */
     private static final int BLOCK_SIZE = 128;
 
+    /** 128-bit interim result. */
+    private int h0, h1, h2, h3, h4, h5, h6, h7;
+
     /**
-     * 
+     * Fields keep amount of rounds. Default value is 3 rounds.
      */
     private int rounds = HAVAL_3_ROUND;
 
@@ -123,10 +126,22 @@ public class Haval extends BaseHash {
         return null;
     }
 
+    /**
+     * Resets the instance for future re-use. This method overrides an existing
+     * method.
+     * 
+     * @see com.m4gik.BaseHash#resetContext()
+     */
     @Override
     protected void resetContext() {
-        // TODO Auto-generated method stub
-
+        h0 = 0x243F6A88;
+        h1 = 0x85A308D3;
+        h2 = 0x13198A2E;
+        h3 = 0x03707344;
+        h4 = 0xA4093822;
+        h5 = 0x299F31D0;
+        h6 = 0x082EFA98;
+        h7 = 0xEC4E6C89;
     }
 
     @Override
