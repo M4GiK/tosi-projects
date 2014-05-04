@@ -6,6 +6,8 @@ import static com.m4gik.HavalAttributes.HAVAL_192_BIT;
 import static com.m4gik.HavalAttributes.HAVAL_224_BIT;
 import static com.m4gik.HavalAttributes.HAVAL_256_BIT;
 import static com.m4gik.HavalAttributes.HAVAL_3_ROUND;
+import static com.m4gik.HavalAttributes.HAVAL_4_ROUND;
+import static com.m4gik.HavalAttributes.HAVAL_5_ROUND;
 import static com.m4gik.HavalAttributes.HAVAL_HASH;
 
 /**
@@ -64,7 +66,7 @@ public class Haval extends BaseHash {
     public Haval(int size, int rounds) {
         super(HAVAL_HASH, size, BLOCK_SIZE);
         checkHavalOutputSize(size);
-
+        checkHavalRounds(rounds);
         this.rounds = rounds;
     }
 
@@ -86,6 +88,21 @@ public class Haval extends BaseHash {
                 && size != HAVAL_256_BIT) {
             throw new IllegalArgumentException("Invalid HAVAL output size");
         }
+    }
+
+    /**
+     * This method checks proper amount of rounds.
+     * 
+     * @param rounds
+     *            The amount of rounds to check.
+     * @throws IllegalArgumentException
+     */
+    private void checkHavalRounds(int rounds) throws IllegalArgumentException {
+        if (rounds != HAVAL_3_ROUND && rounds != HAVAL_4_ROUND
+                && rounds != HAVAL_5_ROUND) {
+            throw new IllegalArgumentException("Invalid HAVAL number of rounds");
+        }
+
     }
 
     @Override
