@@ -39,10 +39,20 @@ public class HavalTest {
 
     private final String expectedHash;
 
+    private final String input;
+
+    private final Integer rounds;
+
+    private final Integer size;
+
     public HavalTest(String input, String expectedHash, Integer size,
             Integer rounds) {
-        this.actualHash = new Haval(input, size, rounds).digest().toString();
+        this.actualHash = "test";// new Haval(input, size,
+                                 // rounds).digest().toString();
+        this.input = input;
         this.expectedHash = expectedHash;
+        this.size = size;
+        this.rounds = rounds;
     }
 
     @Test
@@ -55,11 +65,21 @@ public class HavalTest {
         assertThat(actualHash, is(equalTo(expectedHash)));
     }
 
+    @Test
+    public void testPositiveScenarioOfOutputSize() {
+        new Haval(HavalAttributes.HAVAL_128_BIT, rounds);
+    }
+
     @Test(
             expected = IllegalArgumentException.class)
     public void testThrowsIfInputIsNull() {
-        new Haval(null, HavalAttributes.HAVAL_128_BIT,
-                HavalAttributes.HAVAL_5_ROUND);
+        new Haval(null, size, rounds);
+    }
+
+    @Test(
+            expected = IllegalArgumentException.class)
+    public void testThrowsIfSizeIsWrong() {
+        new Haval(HavalAttributes.HAVAL_128_BIT - 1, rounds);
     }
 
 }

@@ -1,10 +1,13 @@
 package com.m4gik;
 
 import static com.m4gik.HavalAttributes.HAVAL_128_BIT;
+import static com.m4gik.HavalAttributes.HAVAL_160_BIT;
+import static com.m4gik.HavalAttributes.HAVAL_192_BIT;
+import static com.m4gik.HavalAttributes.HAVAL_224_BIT;
+import static com.m4gik.HavalAttributes.HAVAL_256_BIT;
 import static com.m4gik.HavalAttributes.HAVAL_3_ROUND;
 import static com.m4gik.HavalAttributes.HAVAL_HASH;
 
-//import static com.m4gik.HavalAttributes.*;
 /**
  * The Haval (One-Way Hashing Algorithm) message-digest algorithm is a variable
  * output length, with variable number of rounds. By default, this
@@ -16,9 +19,10 @@ import static com.m4gik.HavalAttributes.HAVAL_HASH;
 public class Haval extends BaseHash {
 
     /**
-     * Calls the constructor with two argument using {@link #HAVAL_128_BIT} as
-     * the value for the output size (i.e. <code>128</code> bits, and
-     * {@link #HAVAL_3_ROUND} for the value of number of rounds.
+     * Calls the constructor with two argument using {@link
+     * HavalAttributes.#HAVAL_128_BIT} as the value for the output size (i.e.
+     * <code>128</code> bits, and {@link HavalAttributes.#HAVAL_3_ROUND} for the
+     * value of number of rounds.
      */
     public Haval() {
         this(HAVAL_128_BIT, HAVAL_3_ROUND);
@@ -38,23 +42,39 @@ public class Haval extends BaseHash {
      * @throws IllegalArgumentException
      *             if the designated output size is invalid, or if the number of
      *             rounds is invalid.
-     * @see #HAVAL_128_BIT
-     * @see #HAVAL_160_BIT
-     * @see #HAVAL_192_BIT
-     * @see #HAVAL_224_BIT
-     * @see #HAVAL_256_BIT
-     * @see #HAVAL_3_ROUND
-     * @see #HAVAL_4_ROUND
-     * @see #HAVAL_5_ROUND
+     * @see HavalAttributes.#HAVAL_128_BIT
+     * @see HavalAttributes.#HAVAL_160_BIT
+     * @see HavalAttributes.#HAVAL_192_BIT
+     * @see HavalAttributes.#HAVAL_224_BIT
+     * @see HavalAttributes.#HAVAL_256_BIT
+     * @see HavalAttributes.#HAVAL_3_ROUND
+     * @see HavalAttributes.#HAVAL_4_ROUND
+     * @see HavalAttributes.#HAVAL_5_ROUND
      */
     public Haval(int size, int rounds) {
         super(HAVAL_HASH, size, HAVAL_128_BIT);
+        checkHavalOutputSize(size);
         // TODO Auto-generated constructor stub
     }
 
     protected Haval(String name, int hashSize, int blockSize) {
         super(name, hashSize, blockSize);
         // TODO Auto-generated constructor stub
+    }
+
+    /**
+     * This method checks proper output size for Haval algorithm.
+     * 
+     * @param size
+     *            The size to check.
+     * @throws IllegalArgumentException
+     */
+    private void checkHavalOutputSize(int size) throws IllegalArgumentException {
+        if (size != HAVAL_128_BIT && size != HAVAL_160_BIT
+                && size != HAVAL_192_BIT && size != HAVAL_224_BIT
+                && size != HAVAL_256_BIT) {
+            throw new IllegalArgumentException("Invalid HAVAL output size");
+        }
     }
 
     @Override
