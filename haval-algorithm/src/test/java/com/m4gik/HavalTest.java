@@ -66,6 +66,11 @@ public class HavalTest {
     }
 
     @Test
+    public void testPositiveScenarioOfAmountRounds() {
+        new Haval(size, rounds);
+    }
+
+    @Test
     public void testPositiveScenarioOfOutputSize() {
         new Haval(HavalAttributes.HAVAL_128_BIT, rounds);
     }
@@ -74,6 +79,12 @@ public class HavalTest {
             expected = IllegalArgumentException.class)
     public void testThrowsIfInputIsNull() {
         new Haval(null, size, rounds);
+    }
+
+    @Test(
+            expected = IllegalArgumentException.class)
+    public void testThrowsIfRoundsIsWrong() {
+        new Haval(size, -1);
     }
 
     @Test(

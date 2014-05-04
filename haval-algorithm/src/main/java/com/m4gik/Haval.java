@@ -19,6 +19,16 @@ import static com.m4gik.HavalAttributes.HAVAL_HASH;
 public class Haval extends BaseHash {
 
     /**
+     * Inner block size in bytes.
+     */
+    private static final int BLOCK_SIZE = 128;
+
+    /**
+     * 
+     */
+    private int rounds = HAVAL_3_ROUND;
+
+    /**
      * Calls the constructor with two argument using {@link
      * HavalAttributes.#HAVAL_128_BIT} as the value for the output size (i.e.
      * <code>128</code> bits, and {@link HavalAttributes.#HAVAL_3_ROUND} for the
@@ -52,9 +62,10 @@ public class Haval extends BaseHash {
      * @see HavalAttributes.#HAVAL_5_ROUND
      */
     public Haval(int size, int rounds) {
-        super(HAVAL_HASH, size, HAVAL_128_BIT);
+        super(HAVAL_HASH, size, BLOCK_SIZE);
         checkHavalOutputSize(size);
-        // TODO Auto-generated constructor stub
+
+        this.rounds = rounds;
     }
 
     protected Haval(String name, int hashSize, int blockSize) {
