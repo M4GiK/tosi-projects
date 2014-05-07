@@ -10,6 +10,11 @@ package com.m4gik;
 public class HavalAttributes {
 
     /**
+     * The value specify the inner block size in bytes.
+     */
+    public static final int BLOCK_SIZE = 128;
+
+    /**
      * The value for produce hashes in lengths of 128 bits.
      */
     public static final int HAVAL_128_BIT = 16;
@@ -55,7 +60,7 @@ public class HavalAttributes {
     /**
      * Name for algorithm.
      */
-    public static final String HAVAL_HASH = "haval";
+    public static final String HAVAL_NAME = "haval";
 
     /**
      * The value specify the version of algorithm.
