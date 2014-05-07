@@ -130,7 +130,7 @@ public class SHA1 {
      */
     private static void processTheBlock(byte[] work, int[] h, int[] k) {
         int[] w = new int[80];
-        int a, b, c, d, e, f;
+        int a, b, c, d, e, f = 0;
         int temp;
 
         for (int outer = 0; outer < 16; outer++) {
@@ -153,39 +153,19 @@ public class SHA1 {
         d = h[3];
         e = h[4];
 
-        for (int j = 0; j < 20; j++) {
-            f = (b & c) | ((~b) & d);
-            temp = rotateLeft(a, 5) + f + e + k[0] + w[j];
-            e = d;
-            d = c;
-            c = rotateLeft(b, 30);
-            b = a;
-            a = temp;
-        }
+        for (int j = 0; j < 80; ++j) {
 
-        for (int j = 20; j < 40; j++) {
-            f = b ^ c ^ d;
-            temp = rotateLeft(a, 5) + f + e + k[1] + w[j];
-            e = d;
-            d = c;
-            c = rotateLeft(b, 30);
-            b = a;
-            a = temp;
-        }
+            if (j <= 19) {
+                f = (b & c) | ((~b) & d);
+            } else if (j <= 39) {
+                f = b ^ c ^ d;
+            } else if (j <= 59) {
+                f = (b & c) | (b & d) | (c & d);
+            } else if (j <= 79) {
+                f = b ^ c ^ d;
+            }
 
-        for (int j = 40; j < 60; j++) {
-            f = (b & c) | (b & d) | (c & d);
-            temp = rotateLeft(a, 5) + f + e + k[2] + w[j];
-            e = d;
-            d = c;
-            c = rotateLeft(b, 30);
-            b = a;
-            a = temp;
-        }
-
-        for (int j = 60; j < 80; j++) {
-            f = b ^ c ^ d;
-            temp = rotateLeft(a, 5) + f + e + k[3] + w[j];
+            temp = rotateLeft(a, 5) + f + e + k[j / 20] + w[j];
             e = d;
             d = c;
             c = rotateLeft(b, 30);
