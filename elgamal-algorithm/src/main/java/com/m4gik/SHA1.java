@@ -60,7 +60,7 @@ public class SHA1 {
     }
 
     /**
-     * This method converts integer array to hex string.
+     * This method converts integer array to hex string and adds leading zeros.
      * 
      * @param data
      *            The data to transform.
@@ -69,30 +69,10 @@ public class SHA1 {
     private static String intArrayToHexStr(int[] data) {
         String output = "";
         String tempStr = "";
-        int tempInt = 0;
 
-        for (int cnt = 0; cnt < data.length; cnt++) {
-
-            tempInt = data[cnt];
-
-            tempStr = Integer.toHexString(tempInt);
-
-            if (tempStr.length() == 1) {
-                tempStr = "0000000" + tempStr;
-            } else if (tempStr.length() == 2) {
-                tempStr = "000000" + tempStr;
-            } else if (tempStr.length() == 3) {
-                tempStr = "00000" + tempStr;
-            } else if (tempStr.length() == 4) {
-                tempStr = "0000" + tempStr;
-            } else if (tempStr.length() == 5) {
-                tempStr = "000" + tempStr;
-            } else if (tempStr.length() == 6) {
-                tempStr = "00" + tempStr;
-            } else if (tempStr.length() == 7) {
-                tempStr = "0" + tempStr;
-            }
-
+        for (int cnt : data) {
+            tempStr = String.format("%8s", Integer.toHexString(cnt)).replace(
+                    ' ', '0');
             output = output + tempStr;
         }
 
