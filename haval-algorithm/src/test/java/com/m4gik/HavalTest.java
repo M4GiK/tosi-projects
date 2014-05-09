@@ -47,12 +47,24 @@ public class HavalTest {
 
     public HavalTest(String input, String expectedHash, Integer size,
             Integer rounds) {
-        this.actualHash = "test";// new Haval(input, size,
-                                 // rounds).digest().toString();
+        // com.m4gik.test.Haval test = new com.m4gik.test.Haval(size, rounds);
+        // test.update(input.getBytes());
+        // this.actualHash = Util.toString(test.digest()).toLowerCase();
+        this.actualHash = new Haval(input.getBytes(), size, rounds).digest()
+                .toString();
         this.input = input;
         this.expectedHash = expectedHash;
         this.size = size;
         this.rounds = rounds;
+    }
+
+    @Test
+    public void testCheckStaticHashing() {
+        // When
+        String hash = Haval.hash(input.getBytes(),
+                HavalAttributes.HAVAL_128_BIT, HavalAttributes.HAVAL_3_ROUND);
+        // Then
+        assertThat(hash, is(equalTo(expectedHash)));
     }
 
     @Test
