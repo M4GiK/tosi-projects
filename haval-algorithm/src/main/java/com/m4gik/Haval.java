@@ -11,6 +11,8 @@ import static com.m4gik.HavalAttributes.HAVAL_4_ROUND;
 import static com.m4gik.HavalAttributes.HAVAL_5_ROUND;
 import static com.m4gik.HavalAttributes.HAVAL_NAME;
 
+import com.m4gik.util.Util;
+
 /**
  * The Haval (One-Way Hashing Algorithm) message-digest algorithm is a variable
  * output length, with variable number of rounds. By default, this
@@ -20,6 +22,53 @@ import static com.m4gik.HavalAttributes.HAVAL_NAME;
  * 
  */
 public class Haval extends BaseHash {
+
+    /**
+     * Creates the {@link Haval} hash value for given input bytes with two
+     * argument using {@link HavalAttributes.#HAVAL_128_BIT} as the value for
+     * the output size (i.e. <code>128</code> bits, and {@link
+     * HavalAttributes.#HAVAL_3_ROUND} for the value of number of rounds
+     * 
+     * @param input
+     *            the value from which obtain the hash.
+     * @return hash value for {@link Haval} algorithm.
+     */
+    public static String hash(byte[] input) {
+        return hash(input, HAVAL_128_BIT, HAVAL_3_ROUND);
+    }
+
+    /**
+     * Creates the {@link Haval} hash value for given input bytes with the
+     * designated output size (in bytes). Valid output <code>size</code> values
+     * are <code>16</code>, <code>20</code>, <code>24</code>, <code>28</code>
+     * and <code>32</code>. Valid values for <code>rounds</code> are in the
+     * range <code>3..5</code> inclusive.
+     * 
+     * @param input
+     *            the value from which obtain the hash.
+     * @param size
+     *            the output size in bytes of this instance.
+     * @param rounds
+     *            the number of rounds to apply when transforming data.
+     * @throws IllegalArgumentException
+     *             if the designated output size is invalid, or if the number of
+     *             rounds is invalid.
+     * 
+     * @see HavalAttributes.#HAVAL_128_BIT
+     * @see HavalAttributes.#HAVAL_160_BIT
+     * @see HavalAttributes.#HAVAL_192_BIT
+     * @see HavalAttributes.#HAVAL_224_BIT
+     * @see HavalAttributes.#HAVAL_256_BIT
+     * @see HavalAttributes.#HAVAL_3_ROUND
+     * @see HavalAttributes.#HAVAL_4_ROUND
+     * @see HavalAttributes.#HAVAL_5_ROUND
+     * 
+     * @return hash value for {@link Haval} algorithm.
+     */
+    public static String hash(byte[] input, int size, int rounds) {
+        return Util.toString(new Haval(input, size, rounds).digest())
+                .toLowerCase();
+    }
 
     /** 128-bit interim result. */
     private int h0, h1, h2, h3, h4, h5, h6, h7;
@@ -37,6 +86,41 @@ public class Haval extends BaseHash {
      */
     public Haval() {
         this(HAVAL_128_BIT, HAVAL_3_ROUND);
+    }
+
+    /**
+     * Constructs a <code>Haval</code> instance with the designated output size
+     * (in bytes). Valid output <code>size</code> values are <code>16</code>,
+     * <code>20</code>, <code>24</code>, <code>28</code> and <code>32</code>.
+     * Valid values for <code>rounds</code> are in the range <code>3..5</code>
+     * inclusive.
+     * 
+     * @param input
+     *            the value from which obtain the hash.
+     * @param size
+     *            the output size in bytes of this instance.
+     * @param rounds
+     *            the number of rounds to apply when transforming data.
+     * @throws IllegalArgumentException
+     *             if the designated output size is invalid, or if the number of
+     *             rounds is invalid.
+     * 
+     *             * @see HavalAttributes.#HAVAL_128_BIT
+     * @see HavalAttributes.#HAVAL_160_BIT
+     * @see HavalAttributes.#HAVAL_192_BIT
+     * @see HavalAttributes.#HAVAL_224_BIT
+     * @see HavalAttributes.#HAVAL_256_BIT
+     * @see HavalAttributes.#HAVAL_3_ROUND
+     * @see HavalAttributes.#HAVAL_4_ROUND
+     * @see HavalAttributes.#HAVAL_5_ROUND
+     */
+    public Haval(byte[] input, int size, int rounds) {
+        super(HAVAL_NAME, size, BLOCK_SIZE);
+        checkHavalInput(input);
+        checkHavalOutputSize(size);
+        checkHavalRounds(rounds);
+        this.setRounds(rounds);
+        this.update(input);
     }
 
     /**
@@ -70,44 +154,23 @@ public class Haval extends BaseHash {
     }
 
     /**
-     * Constructs a <code>Haval</code> instance with the designated output size
-     * (in bytes). Valid output <code>size</code> values are <code>16</code>,
-     * <code>20</code>, <code>24</code>, <code>28</code> and <code>32</code>.
-     * Valid values for <code>rounds</code> are in the range <code>3..5</code>
-     * inclusive.
+     * This method checks proper input value for {@link Haval} hashing.
      * 
      * @param input
-     *            the value from which obtain the hash.
-     * @param size
-     *            the output size in bytes of this instance.
-     * @param rounds
-     *            the number of rounds to apply when transforming data.
+     *            the value to check.
      * @throws IllegalArgumentException
-     *             if the designated output size is invalid, or if the number of
-     *             rounds is invalid.
-     * 
-     *             * @see HavalAttributes.#HAVAL_128_BIT
-     * @see HavalAttributes.#HAVAL_160_BIT
-     * @see HavalAttributes.#HAVAL_192_BIT
-     * @see HavalAttributes.#HAVAL_224_BIT
-     * @see HavalAttributes.#HAVAL_256_BIT
-     * @see HavalAttributes.#HAVAL_3_ROUND
-     * @see HavalAttributes.#HAVAL_4_ROUND
-     * @see HavalAttributes.#HAVAL_5_ROUND
      */
-    public Haval(String input, int size, int rounds) {
-        super(HAVAL_NAME, size, BLOCK_SIZE);
-        checkHavalOutputSize(size);
-        checkHavalRounds(rounds);
-        this.setRounds(rounds);
-        this.update(input.getBytes());
+    private void checkHavalInput(byte[] input) throws IllegalArgumentException {
+        if (input == null) {
+            throw new IllegalArgumentException("Input cannot be null");
+        }
     }
 
     /**
-     * This method checks proper output size for Haval algorithm.
+     * This method checks proper output size for {@link Haval} algorithm.
      * 
      * @param size
-     *            The size to check.
+     *            the size to check.
      * @throws IllegalArgumentException
      */
     private void checkHavalOutputSize(int size) throws IllegalArgumentException {
@@ -122,7 +185,7 @@ public class Haval extends BaseHash {
      * This method checks proper amount of rounds.
      * 
      * @param rounds
-     *            The amount of rounds to check.
+     *            the amount of rounds to check.
      * @throws IllegalArgumentException
      */
     private void checkHavalRounds(int rounds) throws IllegalArgumentException {
@@ -142,7 +205,7 @@ public class Haval extends BaseHash {
     @Override
     protected byte[] getResult() {
         // TODO Auto-generated method stub
-        return "0".getBytes();
+        return "null".getBytes();
     }
 
     /**
@@ -157,7 +220,7 @@ public class Haval extends BaseHash {
     @Override
     protected byte[] padBuffer() {
         // TODO Auto-generated method stub
-        return null;
+        return "null".getBytes();
     }
 
     /**
@@ -179,6 +242,8 @@ public class Haval extends BaseHash {
     }
 
     /**
+     * This method sets number of rounds for {@link Haval} algorithm.
+     * 
      * @param rounds
      *            the rounds to set
      */
