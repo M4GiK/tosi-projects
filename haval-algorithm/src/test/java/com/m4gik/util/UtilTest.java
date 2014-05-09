@@ -23,9 +23,12 @@ public class UtilTest {
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
-                { new String("test").getBytes() },
-                { new Integer(8).byteValue() } });
+        return Arrays
+                .asList(new Object[][] {
+                        { new String("713502673d67e5fa557629a71d331945")
+                                .getBytes() },
+                        { new String("6eece560a2e8d6b919e81fe91b0e7156")
+                                .getBytes() }, });
     }
 
     private final Object input;
@@ -39,4 +42,9 @@ public class UtilTest {
         assertThat(input, is(notNullValue()));
     }
 
+    @Test(
+            expected = NumberFormatException.class)
+    public void testThrowIfGivenStingIsNotHexValue() {
+        Util.toString((byte[]) input);
+    }
 }
