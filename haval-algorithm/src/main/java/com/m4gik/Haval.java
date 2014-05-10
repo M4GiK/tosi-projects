@@ -124,6 +124,27 @@ public class Haval extends BaseHash {
     }
 
     /**
+     * Private constructor for cloning purposes.
+     * 
+     * @param originalInstance
+     *            the instance to clone.
+     */
+    public Haval(Haval originalInstance) {
+        this(originalInstance.hashSize(), originalInstance.getRounds());
+
+        this.h0 = originalInstance.h0;
+        this.h1 = originalInstance.h1;
+        this.h2 = originalInstance.h2;
+        this.h3 = originalInstance.h3;
+        this.h4 = originalInstance.h4;
+        this.h5 = originalInstance.h5;
+        this.h6 = originalInstance.h6;
+        this.h7 = originalInstance.h7;
+        this.count = originalInstance.count;
+        this.buffer = originalInstance.buffer.clone();
+    }
+
+    /**
      * Constructs a <code>Haval</code> instance with the designated output size
      * (in bytes). Valid output <code>size</code> values are <code>16</code>,
      * <code>20</code>, <code>24</code>, <code>28</code> and <code>32</code>.
@@ -198,8 +219,7 @@ public class Haval extends BaseHash {
 
     @Override
     public Object clone() {
-        // TODO Auto-generated method stub
-        return null;
+        return new Haval(this);
     }
 
     @Override
