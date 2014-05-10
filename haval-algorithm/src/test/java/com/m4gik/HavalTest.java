@@ -2,6 +2,7 @@ package com.m4gik;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -11,6 +12,8 @@ import java.util.Collection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+
+import com.m4gik.util.Util;
 
 /**
  * 
@@ -47,11 +50,8 @@ public class HavalTest {
 
     public HavalTest(String input, String expectedHash, Integer size,
             Integer rounds) {
-        // com.m4gik.test.Haval test = new com.m4gik.test.Haval(size, rounds);
-        // test.update(input.getBytes());
-        // this.actualHash = Util.toString(test.digest()).toLowerCase();
-        this.actualHash = new Haval(input.getBytes(), size, rounds).digest()
-                .toString();
+        this.actualHash = Util.toString(new Haval(input.getBytes(), size,
+                rounds).digest());
         this.input = input;
         this.expectedHash = expectedHash;
         this.size = size;
@@ -65,6 +65,19 @@ public class HavalTest {
                 HavalAttributes.HAVAL_128_BIT, HavalAttributes.HAVAL_3_ROUND);
         // Then
         assertThat(hash, is(equalTo(expectedHash)));
+    }
+
+    @Test
+    public void testCloneMethod() {
+        // What
+        Haval haval = new Haval();
+        Haval havalClone;
+        // When
+        havalClone = (Haval) haval.clone();
+        // Then
+        assertThat(havalClone, is(instanceOf(Haval.class)));
+        assertThat(havalClone.hashSize(), is(haval.hashSize));
+        assertThat(havalClone.getRounds(), is(haval.getRounds()));
     }
 
     @Test
