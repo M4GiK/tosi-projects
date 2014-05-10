@@ -74,6 +74,12 @@ public abstract class BaseHash implements IMessageDigest {
         }
     }
 
+    /**
+     * Returns a clone copy of this instance. This method overrides an existing
+     * method.
+     * 
+     * @see java.lang.Object#clone()
+     */
     public abstract Object clone();
 
     public byte[] digest() {

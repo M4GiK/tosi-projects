@@ -217,6 +217,12 @@ public class Haval extends BaseHash {
 
     }
 
+    /**
+     * Returns a clone copy of this instance. This method overrides an existing
+     * method.
+     * 
+     * @see com.m4gik.BaseHash#clone()
+     */
     @Override
     public Object clone() {
         return new Haval(this);
