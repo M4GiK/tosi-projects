@@ -12,6 +12,9 @@ import static com.m4gik.HavalAttributes.HAVAL_5_ROUND;
 import static com.m4gik.HavalAttributes.HAVAL_NAME;
 import static com.m4gik.HavalAttributes.HAVAL_VERSION;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.crypto.IllegalBlockSizeException;
 
 import com.m4gik.util.Util;
@@ -256,6 +259,23 @@ public class Haval extends BaseHash {
         return new Haval(this);
     }
 
+    private void fifthPass(int[] xTable, List<Integer> collectionH,
+            List<Integer> constatnts) {
+        // TODO Auto-generated method stub
+
+    }
+
+    private void firstPass(int[] xTable, List<Integer> collectionH) {
+        // TODO Auto-generated method stub
+
+    }
+
+    private void fourthPass(int[] xTable, List<Integer> collectionH,
+            List<Integer> constatnts) {
+        // TODO Auto-generated method stub
+
+    }
+
     @Override
     protected byte[] getResult() {
         // TODO Auto-generated method stub
@@ -338,6 +358,12 @@ public class Haval extends BaseHash {
         h7 = 0xEC4E6C89;
     }
 
+    private void secondPass(int[] xTable, List<Integer> collectionH,
+            List<Integer> constatnts) {
+        // TODO Auto-generated method stub
+
+    }
+
     /**
      * This method sets number of rounds for {@link Haval} algorithm.
      * 
@@ -348,10 +374,100 @@ public class Haval extends BaseHash {
         this.rounds = rounds;
     }
 
-    @Override
-    protected void transform(byte[] in, int offset) {
+    private void thirdPass(int[] xTable, List<Integer> collectionH,
+            List<Integer> constatnts) {
         // TODO Auto-generated method stub
 
     }
 
+    /**
+     * The updating algorithm H processes a block in 3, 4 or 5 passes, which is
+     * specified by the 3-bit field PASS in the last block. This method
+     * overrides an existing method. The first 8 constant words correspond to
+     * the first 256 bits of the fraction part of phi. The 32 constant words
+     * used in Pass 2 correspond to the next 1024 bits of the fraction part of
+     * phi, which is followed by the 32 constant words used by Pass 3, the 32
+     * constant words used by Pass 4 and the 32 constant words used by Pass 5.
+     * The 136 constant words are listed in the following in hexadecimal form.
+     * They appear in the following order:
+     * 
+     * 243F6A88 85A308D3 13198A2E 03707344 A4093822 299F31D0 082EFA98 EC4E6C89
+     * 452821E6 38D01377 BE5466CF 34E90C6C C0AC29B7 C97C50DD 3F84D5B5 B5470917
+     * 9216D5D9 8979FB1B D1310BA6 98DFB5AC 2FFD72DB D01ADFB7 B8E1AFED 6A267E96
+     * BA7C9045 F12C7F99 24A19947 B3916CF7 0801F2E2 858EFC16 636920D8 71574E69
+     * A458FEA3 F4933D7E 0D95748F 728EB658 718BCD58 82154AEE 7B54A41D C25A59B5
+     * 9C30D539 2AF26013 C5D1B023 286085F0 CA417918 B8DB38EF 8E79DCB0 603A180E
+     * 6C9E0E8B B01E8A3E D71577C1 BD314B27 78AF2FDA 55605C60 E65525F3 AA55AB94
+     * 57489862 63E81440 55CA396A 2AAB10B6 B4CC5C34 1141E8CE A15486AF 7C72E993
+     * B3EE1411 636FBC2A 2BA9C55D 741831F6 CE5C3E16 9B87931E AFD6BA33 6C24CF5C
+     * 7A325381 28958677 3B8F4898 6B4BB9AF C4BFE81B 66282193 61D809CC FB21A991
+     * 487CAC60 5DEC8032 EF845D5D E98575B1 DC262302 EB651B88 23893E81 D396ACC5
+     * 0F6D6FF3 83F44239 2E0B4482 A4842004 69C8F04A 9E1F9B5E 21C66842 F6E96C9A
+     * 670C9C61 ABD388F0 6A51A0D2 D8542F68 960FA728 AB5133A3 6EEF0B6C 137A3BE4
+     * BA3BF050 7EFB2A98 A1F1651D 39AF0176 66CA593E 82430E88 8CEE8619 456F9FB4
+     * 7D84A5C3 3B8B5EBE E06F75D8 85C12073 401A449F 56C16AA6 4ED3AA62 363F7706
+     * 1BFEDF72 429B023D 37D0D724 D00A1248 DB0FEAD3 49F1C09B 075372C9 80991B7B
+     * 25D479D8 F6E8DEF7 E3FE501A B6794C3B 976CE0BD 04C006BA C1A94FB6 409F60C4
+     * 
+     * 
+     * @see com.m4gik.BaseHash#transform(byte[], int)
+     */
+    @Override
+    protected void transform(byte[] in, int offset) {
+        List<Integer> collectionH = Arrays.asList(h0, h1, h2, h3, h4, h5, h6,
+                h7);
+        List<Integer> constatnts = Arrays.asList(0x452821E6, 0x38D01377,
+                0xBE5466CF, 0x34E90C6C, 0xC0AC29B7, 0xC97C50DD, 0x3F84D5B5,
+                0xB5470917, 0x9216D5D9, 0x8979FB1B, 0xD1310BA6, 0x98DFB5AC,
+                0x2FFD72DB, 0xD01ADFB7, 0xB8E1AFED, 0x6A267E96, 0xBA7C9045,
+                0xF12C7F99, 0x24A19947, 0xB3916CF7, 0x0801F2E2, 0x858EFC16,
+                0x636920D8, 0x71574E69, 0xA458FEA3, 0xF4933D7E, 0x0D95748F,
+                0x728EB658, 0x718BCD58, 0x82154AEE, 0x7B54A41D, 0xC25A59B5,
+                0x9C30D539, 0x2AF26013, 0xC5D1B023, 0x286085F0, 0xCA417918,
+                0xB8DB38EF, 0x8E79DCB0, 0x603A180E, 0x6C9E0E8B, 0xB01E8A3E,
+                0xD71577C1, 0xBD314B27, 0x78AF2FDA, 0x55605C60, 0xE65525F3,
+                0xAA55AB94, 0x57489862, 0x63E81440, 0x55CA396A, 0x2AAB10B6,
+                0xB4CC5C34, 0x1141E8CE, 0xA15486AF, 0x7C72E993, 0xB3EE1411,
+                0x636FBC2A, 0x2BA9C55D, 0x741831F6, 0xCE5C3E16, 0x9B87931E,
+                0xAFD6BA33, 0x6C24CF5C, 0x7A325381, 0x28958677, 0x3B8F4898,
+                0x6B4BB9AF, 0xC4BFE81B, 0x66282193, 0x61D809CC, 0xFB21A991,
+                0x487CAC60, 0x5DEC8032, 0xEF845D5D, 0xE98575B1, 0xDC262302,
+                0xEB651B88, 0x23893E81, 0xD396ACC5, 0x0F6D6FF3, 0x83F44239,
+                0x2E0B4482, 0xA4842004, 0x69C8F04A, 0x9E1F9B5E, 0x21C66842,
+                0xF6E96C9A, 0x670C9C61, 0xABD388F0, 0x6A51A0D2, 0xD8542F68,
+                0x960FA728, 0xAB5133A3, 0x6EEF0B6C, 0x137A3BE4, 0xBA3BF050,
+                0x7EFB2A98, 0xA1F1651D, 0x39AF0176, 0x66CA593E, 0x82430E88,
+                0x8CEE8619, 0x456F9FB4, 0x7D84A5C3, 0x3B8B5EBE, 0xE06F75D8,
+                0x85C12073, 0x401A449F, 0x56C16AA6, 0x4ED3AA62, 0x363F7706,
+                0x1BFEDF72, 0x429B023D, 0x37D0D724, 0xD00A1248, 0xDB0FEAD3,
+                0x49F1C09B, 0x075372C9, 0x80991B7B, 0x25D479D8, 0xF6E8DEF7,
+                0xE3FE501A, 0xB6794C3B, 0x976CE0BD, 0x04C006BA, 0xC1A94FB6,
+                0x409F60C4);
+
+        int[] XTable = new int[32];
+
+        for (int i = 0; i < 32; i++) {
+            XTable[i] = (in[offset++] & 0xFF) | (in[offset++] & 0xFF) << 8
+                    | (in[offset++] & 0xFF) << 16 | (in[offset++] & 0xFF) << 24;
+        }
+
+        firstPass(XTable, collectionH);
+        secondPass(XTable, collectionH, constatnts);
+        thirdPass(XTable, collectionH, constatnts);
+        if (getRounds() >= 4) {
+            fourthPass(XTable, collectionH, constatnts);
+            if (getRounds() == 5) {
+                fifthPass(XTable, collectionH, constatnts);
+            }
+        }
+
+        h7 += collectionH.get(7);
+        h6 += collectionH.get(6);
+        h5 += collectionH.get(5);
+        h4 += collectionH.get(4);
+        h3 += collectionH.get(3);
+        h2 += collectionH.get(2);
+        h1 += collectionH.get(1);
+        h0 += collectionH.get(0);
+    }
 }
