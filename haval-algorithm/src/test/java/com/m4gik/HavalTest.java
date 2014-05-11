@@ -9,6 +9,8 @@ import static org.hamcrest.Matchers.notNullValue;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.crypto.IllegalBlockSizeException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -88,6 +90,17 @@ public class HavalTest {
     @Test
     public void testHashIsValid() {
         assertThat(actualHash, is(equalTo(expectedHash)));
+    }
+
+    @Test(
+            expected = IllegalBlockSizeException.class)
+    public void testPadBufferResultSize() {
+        // What
+        Haval haval = new Haval();
+        // When
+        byte[] result = haval.padBuffer();
+        // Then
+        assertThat(result.length % HavalAttributes.BLOCK_SIZE, is(0));
     }
 
     @Test
