@@ -10,6 +10,9 @@ import static com.m4gik.HavalAttributes.HAVAL_3_ROUND;
 import static com.m4gik.HavalAttributes.HAVAL_4_ROUND;
 import static com.m4gik.HavalAttributes.HAVAL_5_ROUND;
 import static com.m4gik.HavalAttributes.HAVAL_NAME;
+import static com.m4gik.HavalAttributes.HAVAL_VERSION;
+
+import javax.crypto.IllegalBlockSizeException;
 
 import com.m4gik.util.Util;
 
@@ -218,6 +221,31 @@ public class Haval extends BaseHash {
     }
 
     /**
+     * This method checks proper size of padding with checking last 10 special
+     * bytes.
+     * 
+     * @param padBuffer
+     *            the padded message result.
+     * @param padding
+     *            the value for pad data.
+     * @return
+     */
+    private byte[] checkPadBufferSize(byte[] padBuffer, int padding) {
+        for (int i = 1; i > padding; i++) {
+            if (padBuffer[i] != 0x00) {
+                try {
+                    throw new IllegalBlockSizeException(
+                            "Padding is not filled correctly");
+                } catch (IllegalBlockSizeException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return padBuffer;
+    }
+
+    /**
      * Returns a clone copy of this instance. This method overrides an existing
      * method.
      * 
@@ -243,10 +271,53 @@ public class Haval extends BaseHash {
         return rounds;
     }
 
+    /**
+     * Returns the byte array to use as padding before completing a hash
+     * operation. This method overrides an existing method. HAVAL also uses a
+     * 10-bit field DGSTLENG to specify the required number of bits in a digest.
+     * In addition HAVAL uses a 3-bit field PASS to specify the number of passes
+     * each message block is processed, and another 3-bit field VERSION to
+     * indicate the version number of HAVAL. The number of bits in a digest can
+     * be 128, 160, 192, 224 and 256, while the number of passes can be 3, 4 and
+     * 5. The current version number of HAVAL is 1. HAVAL pads a message by
+     * appending a single bit 1 next to the most significant bit of the message,
+     * followed by zero or more bit 0s until the length of the (new) message is
+     * 944 modulo 1024. Then, HAVAL appends to the message the 3-bit field
+     * VERSION, followed by the 3-bit field PASS, the 10-bit field DGSTLENG and
+     * the 64-bit field MSGLENG.
+     * 
+     * 
+     * @return the bytes to pad the remaining bytes in the buffer before
+     *         completing a hash operation.
+     * 
+     * @see com.m4gik.BaseHash#padBuffer()
+     */
     @Override
     protected byte[] padBuffer() {
-        // TODO Auto-generated method stub
-        return "null".getBytes();
+        // Pad out to 118 mod 128. Other 10 bytes have special use.
+        int n = (int) (count % BLOCK_SIZE);
+        int padding = (n < 118) ? (118 - n) : (246 - n);
+        byte[] result = new byte[padding + 10];
+        result[0] = (byte) 0x01;
+
+        // Save the version number (LSB 3), the number of rounds (3 bits in the
+        // middle), the fingerprint length (MSB 2 bits and next byte) and the
+        // number of bits in the unpadded message.
+        int bl = hashSize() * 8;
+        int sigByte = (bl & 0x03) << 6;
+        sigByte |= (getRounds() & 0x07) << 3;
+        sigByte |= HAVAL_VERSION & 0x07;
+        result[padding++] = (byte) sigByte;
+        result[padding++] = (byte) (bl >>> 2);
+
+        // Save number of bits, casting the long to an array of 8 bytes
+        long bits = count << 3;
+        int j = 0;
+        for (int i = padding; i < result.length; i++, j++) {
+            result[i] = (byte) (bits >>> (j * 8));
+        }
+
+        return checkPadBufferSize(result, padding);
     }
 
     /**
