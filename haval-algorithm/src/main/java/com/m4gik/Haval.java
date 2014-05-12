@@ -12,10 +12,10 @@ import static com.m4gik.HavalAttributes.HAVAL_4_ROUND;
 import static com.m4gik.HavalAttributes.HAVAL_5_ROUND;
 import static com.m4gik.HavalAttributes.HAVAL_NAME;
 import static com.m4gik.HavalAttributes.HAVAL_VERSION;
-import static com.m4gik.HavalAttributes.WORD_PROCESING_ORDER_1;
-import static com.m4gik.HavalAttributes.WORD_PROCESING_ORDER_2;
-import static com.m4gik.HavalAttributes.WORD_PROCESING_ORDER_3;
-import static com.m4gik.HavalAttributes.WORD_PROCESING_ORDER_4;
+import static com.m4gik.HavalAttributes.WORD_PROCESSING_ORDER_1;
+import static com.m4gik.HavalAttributes.WORD_PROCESSING_ORDER_2;
+import static com.m4gik.HavalAttributes.WORD_PROCESSING_ORDER_3;
+import static com.m4gik.HavalAttributes.WORD_PROCESSING_ORDER_4;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -464,7 +464,7 @@ public class Haval extends BaseHash {
                 collectionH.set(
                         j,
                         ff1(rotate(collectionH, 1),
-                                xTable[WORD_PROCESING_ORDER_1[index++]]));
+                                xTable[WORD_PROCESSING_ORDER_1[index++]]));
             }
         }
     }
@@ -486,7 +486,7 @@ public class Haval extends BaseHash {
                 collectionH.set(
                         j,
                         ff4(rotate(collectionH, 1),
-                                xTable[WORD_PROCESING_ORDER_4[index++]],
+                                xTable[WORD_PROCESSING_ORDER_4[index++]],
                                 CONSTANTS.get(iterator++)));
             }
         }
@@ -611,7 +611,7 @@ public class Haval extends BaseHash {
                 collectionH.set(
                         j,
                         ff2(rotate(collectionH, 1),
-                                xTable[WORD_PROCESING_ORDER_2[index++]],
+                                xTable[WORD_PROCESSING_ORDER_2[index++]],
                                 CONSTANTS.get(iterator++)));
             }
         }
@@ -654,7 +654,7 @@ public class Haval extends BaseHash {
                 collectionH.set(
                         j,
                         ff3(rotate(collectionH, 1),
-                                xTable[WORD_PROCESING_ORDER_3[index++]],
+                                xTable[WORD_PROCESSING_ORDER_3[index++]],
                                 CONSTANTS.get(iterator++)));
             }
         }

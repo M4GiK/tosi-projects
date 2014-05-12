@@ -92,6 +92,15 @@ public class HavalTest {
     }
 
     @Test
+    public void testHavalWordProcessingOrders() {
+        assertThat(HavalAttributes.WORD_PROCESSING_ORDER_1.length, is(32));
+        assertThat(HavalAttributes.WORD_PROCESSING_ORDER_2.length, is(32));
+        assertThat(HavalAttributes.WORD_PROCESSING_ORDER_3.length, is(32));
+        assertThat(HavalAttributes.WORD_PROCESSING_ORDER_4.length, is(32));
+        assertThat(HavalAttributes.WORD_PROCESSING_ORDER_5.length, is(32));
+    }
+
+    @Test
     public void testPadBufferResultSize() {
         // What
         Haval haval = new Haval();
