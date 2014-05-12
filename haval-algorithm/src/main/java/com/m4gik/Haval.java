@@ -519,10 +519,70 @@ public class Haval extends BaseHash {
 
     }
 
+    /**
+     * Constructs the result from the contents of the current context. This
+     * method overrides an existing method.
+     * 
+     * @see com.m4gik.BaseHash#getResult()
+     */
     @Override
     protected byte[] getResult() {
-        // TODO Auto-generated method stub
-        return "null".getBytes();
+
+        // Tailor context for the designated output size cast enough top context
+        // values into an array of hashSize bytes
+        tailorDigestBits();
+
+        byte[] result = new byte[hashSize()];
+
+        if (hashSize() >= HAVAL_256_BIT) {
+            result[31] = (byte) (h7 >>> 24);
+            result[30] = (byte) (h7 >>> 16);
+            result[29] = (byte) (h7 >>> 8);
+            result[28] = (byte) h7;
+        }
+
+        if (hashSize() >= HAVAL_224_BIT) {
+            result[27] = (byte) (h6 >>> 24);
+            result[26] = (byte) (h6 >>> 16);
+            result[25] = (byte) (h6 >>> 8);
+            result[24] = (byte) h6;
+        }
+
+        if (hashSize() >= HAVAL_192_BIT) {
+            result[23] = (byte) (h5 >>> 24);
+            result[22] = (byte) (h5 >>> 16);
+            result[21] = (byte) (h5 >>> 8);
+            result[20] = (byte) h5;
+        }
+
+        if (hashSize() >= HAVAL_160_BIT) {
+            result[19] = (byte) (h4 >>> 24);
+            result[18] = (byte) (h4 >>> 16);
+            result[17] = (byte) (h4 >>> 8);
+            result[16] = (byte) h4;
+        }
+
+        result[15] = (byte) (h3 >>> 24);
+        result[14] = (byte) (h3 >>> 16);
+        result[13] = (byte) (h3 >>> 8);
+        result[12] = (byte) h3;
+
+        result[11] = (byte) (h2 >>> 24);
+        result[10] = (byte) (h2 >>> 16);
+        result[9] = (byte) (h2 >>> 8);
+        result[8] = (byte) h2;
+
+        result[7] = (byte) (h1 >>> 24);
+        result[6] = (byte) (h1 >>> 16);
+        result[5] = (byte) (h1 >>> 8);
+        result[4] = (byte) h1;
+
+        result[3] = (byte) (h0 >>> 24);
+        result[2] = (byte) (h0 >>> 16);
+        result[1] = (byte) (h0 >>> 8);
+        result[0] = (byte) h0;
+
+        return result;
     }
 
     /**
@@ -679,6 +739,66 @@ public class Haval extends BaseHash {
      */
     public void setRounds(int rounds) {
         this.rounds = rounds;
+    }
+
+    /**
+     * Tailors the last output.
+     */
+    private void tailorDigestBits() {
+        Integer t = 0;
+
+        if (hashSize() == HAVAL_128_BIT) {
+            t = (h7 & 0x000000FF) | (h6 & 0xFF000000) | (h5 & 0x00FF0000)
+                    | (h4 & 0x0000FF00);
+            h0 += t >>> 8 | t << 24;
+            t = (h7 & 0x0000FF00) | (h6 & 0x000000FF) | (h5 & 0xFF000000)
+                    | (h4 & 0x00FF0000);
+            h1 += t >>> 16 | t << 16;
+            t = (h7 & 0x00FF0000) | (h6 & 0x0000FF00) | (h5 & 0x000000FF)
+                    | (h4 & 0xFF000000);
+            h2 += t >>> 24 | t << 8;
+            t = (h7 & 0xFF000000) | (h6 & 0x00FF0000) | (h5 & 0x0000FF00)
+                    | (h4 & 0x000000FF);
+            h3 += t;
+        }
+
+        if (hashSize() == HAVAL_160_BIT) {
+            t = (h7 & 0x3F) | (h6 & (0x7F << 25)) | (h5 & (0x3F << 19));
+            h0 += t >>> 19 | t << 13;
+            t = (h7 & (0x3F << 6)) | (h6 & 0x3F) | (h5 & (0x7F << 25));
+            h1 += t >>> 25 | t << 7;
+            t = (h7 & (0x7F << 12)) | (h6 & (0x3F << 6)) | (h5 & 0x3F);
+            h2 += t;
+            t = (h7 & (0x3F << 19)) | (h6 & (0x7F << 12)) | (h5 & (0x3F << 6));
+            h3 += (t >>> 6);
+            t = (h7 & (0x7F << 25)) | (h6 & (0x3F << 19)) | (h5 & (0x7F << 12));
+            h4 += (t >>> 12);
+        }
+
+        if (hashSize() == HAVAL_192_BIT) {
+            t = (h7 & 0x1F) | (h6 & (0x3F << 26));
+            h0 += t >>> 26 | t << 6;
+            t = (h7 & (0x1F << 5)) | (h6 & 0x1F);
+            h1 += t;
+            t = (h7 & (0x3F << 10)) | (h6 & (0x1F << 5));
+            h2 += (t >>> 5);
+            t = (h7 & (0x1F << 16)) | (h6 & (0x3F << 10));
+            h3 += (t >>> 10);
+            t = (h7 & (0x1F << 21)) | (h6 & (0x1F << 16));
+            h4 += (t >>> 16);
+            t = (h7 & (0x3F << 26)) | (h6 & (0x1F << 21));
+            h5 += (t >>> 21);
+        }
+
+        if (hashSize() == HAVAL_224_BIT) {
+            h0 += ((h7 >>> 27) & 0x1F);
+            h1 += ((h7 >>> 22) & 0x1F);
+            h2 += ((h7 >>> 18) & 0x0F);
+            h3 += ((h7 >>> 13) & 0x1F);
+            h4 += ((h7 >>> 9) & 0x0F);
+            h5 += ((h7 >>> 4) & 0x1F);
+            h6 += (h7 & 0x0F);
+        }
     }
 
     /**
