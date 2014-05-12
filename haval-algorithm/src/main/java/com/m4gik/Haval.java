@@ -13,6 +13,7 @@ import static com.m4gik.HavalAttributes.HAVAL_NAME;
 import static com.m4gik.HavalAttributes.HAVAL_VERSION;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.crypto.IllegalBlockSizeException;
@@ -259,15 +260,91 @@ public class Haval extends BaseHash {
         return new Haval(this);
     }
 
+    private int f1(int x6, int x5, int x4, int x3, int x2, int x1, int x0) {
+        return x1 & (x0 ^ x4) ^ x2 & x5 ^ x3 & x6 ^ x0;
+    }
+
+    private int f2(int x6, int x5, int x4, int x3, int x2, int x1, int x0) {
+        return x2 & (x1 & ~x3 ^ x4 & x5 ^ x6 ^ x0) ^ x4 & (x1 ^ x5) ^ x3 & x5
+                ^ x0;
+    }
+
+    private int f3(int x6, int x5, int x4, int x3, int x2, int x1, int x0) {
+        return x3 & (x1 & x2 ^ x6 ^ x0) ^ x1 & x4 ^ x2 & x5 ^ x0;
+    }
+
+    private int f4(int x6, int x5, int x4, int x3, int x2, int x1, int x0) {
+        return x4 & (x5 & ~x2 ^ x3 & ~x6 ^ x1 ^ x6 ^ x0) ^ x3
+                & (x1 & x2 ^ x5 ^ x6) ^ x2 & x6 ^ x0;
+    }
+
+    private int f5(int x6, int x5, int x4, int x3, int x2, int x1, int x0) {
+        return x0 & (x1 & x2 & x3 ^ ~x5) ^ x1 & x4 ^ x2 & x5 ^ x3 & x6;
+    }
+
+    /**
+     * Permutations phi_{i,j}, i=3,4,5, j=1,...,i.
+     * 
+     * rounds = 3: 6 5 4 3 2 1 0 | | | | | | | (replaced by) phi_{3,1}: 1 0 3 5
+     * 6 2 4 phi_{3,2}: 4 2 1 0 5 3 6 phi_{3,3}: 6 1 2 3 4 5 0
+     * 
+     * rounds = 4: 6 5 4 3 2 1 0 | | | | | | | (replaced by) phi_{4,1}: 2 6 1 4
+     * 5 3 0 phi_{4,2}: 3 5 2 0 1 6 4 phi_{4,3}: 1 4 3 6 0 2 5 phi_{4,4}: 6 4 0
+     * 5 2 1 3
+     * 
+     * rounds = 5: 6 5 4 3 2 1 0 | | | | | | | (replaced by) phi_{5,1}: 3 4 1 0
+     * 5 2 6 phi_{5,2}: 6 2 1 0 3 4 5 phi_{5,3}: 2 6 0 4 3 1 5 phi_{5,4}: 1 5 3
+     * 2 0 4 6 phi_{5,5}: 2 5 0 6 4 3 1
+     * 
+     * @param collectionH
+     * @param w
+     * @return
+     */
+    private Integer FF1(List<Integer> collectionH, int w) {
+        Integer t = 0;
+
+        if (getRounds() == 3) {
+            f1(collectionH.get(1), collectionH.get(0), collectionH.get(3),
+                    collectionH.get(5), collectionH.get(6), collectionH.get(2),
+                    collectionH.get(4));
+        } else if (getRounds() == 4) {
+            f1(collectionH.get(2), collectionH.get(6), collectionH.get(1),
+                    collectionH.get(4), collectionH.get(5), collectionH.get(3),
+                    collectionH.get(0));
+        } else {
+            f1(collectionH.get(3), collectionH.get(4), collectionH.get(1),
+                    collectionH.get(0), collectionH.get(5), collectionH.get(2),
+                    collectionH.get(6));
+        }
+
+        return (t >>> 7 | t << 25)
+                + (collectionH.get(7) >>> 11 | collectionH.get(7) << 21) + w;
+    }
+
     private void fifthPass(int[] xTable, List<Integer> collectionH,
             List<Integer> constatnts) {
         // TODO Auto-generated method stub
 
     }
 
+    /**
+     * This method makes first pass for haval transformation.
+     * 
+     * @param xTable
+     *            the table with information for this algorithm.
+     * @param collectionH
+     *            the data for interim result.
+     */
     private void firstPass(int[] xTable, List<Integer> collectionH) {
-        // TODO Auto-generated method stub
+        int index = 0;
+        setProperConfiguration(collectionH);
 
+        for (int i = 0; i < 4; i++) {
+            for (int j = collectionH.size() - 1; j >= 0; j--) {
+                collectionH
+                        .set(j, FF1(rotate(collectionH, 1), xTable[index++]));
+            }
+        }
     }
 
     private void fourthPass(int[] xTable, List<Integer> collectionH,
@@ -358,10 +435,39 @@ public class Haval extends BaseHash {
         h7 = 0xEC4E6C89;
     }
 
+    /**
+     * Rotates the elements in the specified list by the specified distance.
+     * After calling this method, the element at index i will be the element
+     * previously at index (i - distance) mod list.size(), for all values of i
+     * between 0 and list.size()-1, inclusive. (This method has no effect on the
+     * size of the list.)
+     * 
+     * @param <T>
+     * 
+     * @param collection
+     *            the array to rotate.
+     * @param index
+     *            the distance to rotate.
+     */
+    private <T> List<T> rotate(List<T> collection, int index) {
+        Collections.rotate(collection, index);
+        return collection;
+    }
+
     private void secondPass(int[] xTable, List<Integer> collectionH,
             List<Integer> constatnts) {
         // TODO Auto-generated method stub
 
+    }
+
+    /**
+     * This method sets collection in proper order.
+     * 
+     * @param collectionH
+     *            the collection to configuration.
+     */
+    private void setProperConfiguration(List<Integer> collectionH) {
+        rotate(collectionH, 6);
     }
 
     /**
