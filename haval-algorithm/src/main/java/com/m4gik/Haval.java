@@ -16,6 +16,7 @@ import static com.m4gik.HavalAttributes.WORD_PROCESSING_ORDER_1;
 import static com.m4gik.HavalAttributes.WORD_PROCESSING_ORDER_2;
 import static com.m4gik.HavalAttributes.WORD_PROCESSING_ORDER_3;
 import static com.m4gik.HavalAttributes.WORD_PROCESSING_ORDER_4;
+import static com.m4gik.HavalAttributes.WORD_PROCESSING_ORDER_5;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -306,21 +307,20 @@ public class Haval extends BaseHash {
         Integer t = 0;
 
         if (getRounds() == 3) {
-            f1(collectionH.get(1), collectionH.get(0), collectionH.get(3),
+            t = f1(collectionH.get(1), collectionH.get(0), collectionH.get(3),
                     collectionH.get(5), collectionH.get(6), collectionH.get(2),
                     collectionH.get(4));
         } else if (getRounds() == 4) {
-            f1(collectionH.get(2), collectionH.get(6), collectionH.get(1),
+            t = f1(collectionH.get(2), collectionH.get(6), collectionH.get(1),
                     collectionH.get(4), collectionH.get(5), collectionH.get(3),
                     collectionH.get(0));
         } else {
-            f1(collectionH.get(3), collectionH.get(4), collectionH.get(1),
+            t = f1(collectionH.get(3), collectionH.get(4), collectionH.get(1),
                     collectionH.get(0), collectionH.get(5), collectionH.get(2),
                     collectionH.get(6));
         }
 
-        return (t >>> 7 | t << 25)
-                + (collectionH.get(7) >>> 11 | collectionH.get(7) << 21) + w;
+        return lastOperationsOfPermutation(t, collectionH.get(7), w, 0);
     }
 
     /**
@@ -357,9 +357,7 @@ public class Haval extends BaseHash {
                     collectionH.get(5));
         }
 
-        return (t >>> 7 | t << 25)
-                + (collectionH.get(7) >>> 11 | collectionH.get(7) << 21) + w
-                + c;
+        return lastOperationsOfPermutation(t, collectionH.get(7), w, c);
     }
 
     /**
@@ -396,9 +394,7 @@ public class Haval extends BaseHash {
                     collectionH.get(5));
         }
 
-        return (t >>> 7 | t << 25)
-                + (collectionH.get(7) >>> 11 | collectionH.get(7) << 21) + w
-                + c;
+        return lastOperationsOfPermutation(t, collectionH.get(7), w, c);
     }
 
     /**
@@ -429,9 +425,28 @@ public class Haval extends BaseHash {
                     collectionH.get(6));
         }
 
-        return (t >>> 7 | t << 25)
-                + (collectionH.get(7) >>> 11 | collectionH.get(7) << 21) + w
-                + c;
+        return lastOperationsOfPermutation(t, collectionH.get(7), w, c);
+    }
+
+    /**
+     * Permutations phi_{i,j}, i=3,4,5, j=1,...,i.
+     * 
+     * rounds = 5: 6 5 4 3 2 1 0 (replaced by) phi_{5,5}: 2 5 0 6 4 3 1
+     * 
+     * @param collectionH
+     *            the data for interim result.
+     * @param w
+     *            the extra value to add.
+     * @param c
+     *            the constant value to add.
+     * @return The value for fifth permutation.
+     */
+    private Integer ff5(List<Integer> collectionH, int w, Integer c) {
+        Integer t = f5(collectionH.get(2), collectionH.get(5),
+                collectionH.get(0), collectionH.get(6), collectionH.get(4),
+                collectionH.get(3), collectionH.get(1));
+
+        return lastOperationsOfPermutation(t, collectionH.get(7), w, c);
     }
 
     /**
@@ -443,7 +458,18 @@ public class Haval extends BaseHash {
      *            the data for interim result.
      */
     private void fifthPass(int[] xTable, List<Integer> collectionH) {
-        // TODO Auto-generated method stub
+        int index = 0;
+        int iterator = 4 * 8 * 3;
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = collectionH.size() - 1; j >= 0; j--) {
+                collectionH.set(
+                        j,
+                        ff5(rotate(collectionH, 1),
+                                xTable[WORD_PROCESSING_ORDER_5[index++]],
+                                CONSTANTS.get(iterator++)));
+            }
+        }
 
     }
 
@@ -506,6 +532,24 @@ public class Haval extends BaseHash {
      */
     public int getRounds() {
         return rounds;
+    }
+
+    /**
+     * This method makes final operation for permutation.
+     * 
+     * @param t
+     *            the computed value during permutation.
+     * @param x7
+     *            the last index of collection of h values.
+     * @param w
+     *            the extra value to add.
+     * @param c
+     *            the constant value to add.
+     * @return the final value of current permutation.
+     */
+    private Integer lastOperationsOfPermutation(Integer t, Integer x7, int w,
+            int c) {
+        return (t >>> 7 | t << 25) + (x7 >>> 11 | x7 << 21) + w + c;
     }
 
     /**
