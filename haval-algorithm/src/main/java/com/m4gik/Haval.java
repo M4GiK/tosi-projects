@@ -11,6 +11,8 @@ import static com.m4gik.HavalAttributes.HAVAL_4_ROUND;
 import static com.m4gik.HavalAttributes.HAVAL_5_ROUND;
 import static com.m4gik.HavalAttributes.HAVAL_NAME;
 import static com.m4gik.HavalAttributes.HAVAL_VERSION;
+import static com.m4gik.HavalAttributes.WORD_PROCESING_ORDER_1;
+import static com.m4gik.HavalAttributes.WORD_PROCESING_ORDER_2;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -285,16 +287,11 @@ public class Haval extends BaseHash {
     /**
      * Permutations phi_{i,j}, i=3,4,5, j=1,...,i.
      * 
-     * rounds = 3: 6 5 4 3 2 1 0 | | | | | | | (replaced by) phi_{3,1}: 1 0 3 5
-     * 6 2 4 phi_{3,2}: 4 2 1 0 5 3 6 phi_{3,3}: 6 1 2 3 4 5 0
+     * rounds = 3: 6 5 4 3 2 1 0 (replaced by) phi_{3,1}: 1 0 3 5 6 2 4
      * 
-     * rounds = 4: 6 5 4 3 2 1 0 | | | | | | | (replaced by) phi_{4,1}: 2 6 1 4
-     * 5 3 0 phi_{4,2}: 3 5 2 0 1 6 4 phi_{4,3}: 1 4 3 6 0 2 5 phi_{4,4}: 6 4 0
-     * 5 2 1 3
+     * rounds = 4: 6 5 4 3 2 1 0 (replaced by) phi_{4,1}: 2 6 1 4 5 3 0
      * 
-     * rounds = 5: 6 5 4 3 2 1 0 | | | | | | | (replaced by) phi_{5,1}: 3 4 1 0
-     * 5 2 6 phi_{5,2}: 6 2 1 0 3 4 5 phi_{5,3}: 2 6 0 4 3 1 5 phi_{5,4}: 1 5 3
-     * 2 0 4 6 phi_{5,5}: 2 5 0 6 4 3 1
+     * rounds = 5: 6 5 4 3 2 1 0 (replaced by) phi_{5,1}: 3 4 1 0 5 2 6
      * 
      * @param collectionH
      *            the data for interim result.
@@ -302,7 +299,7 @@ public class Haval extends BaseHash {
      *            the extra value to add.
      * @return The value for first permutation.
      */
-    private Integer FF1(List<Integer> collectionH, int w) {
+    private Integer ff1(List<Integer> collectionH, int w) {
         Integer t = 0;
 
         if (getRounds() == 3) {
@@ -323,8 +320,46 @@ public class Haval extends BaseHash {
                 + (collectionH.get(7) >>> 11 | collectionH.get(7) << 21) + w;
     }
 
+    /**
+     * Permutations phi_{i,j}, i=3,4,5, j=1,...,i.
+     * 
+     * rounds = 3: 6 5 4 3 2 1 0 (replaced by) phi_{3,2}: 4 2 1 0 5 3 6
+     * 
+     * rounds = 4: 6 5 4 3 2 1 0 (replaced by) phi_{4,2}: 3 5 2 0 1 6 4
+     * 
+     * rounds = 5: 6 5 4 3 2 1 0 (replaced by) phi_{5,2}: 6 2 1 0 3 4 5
+     * 
+     * @param collectionH
+     *            the data for interim result.
+     * @param w
+     *            the extra value to add.
+     * @param c
+     * @return The value for second permutation.
+     */
+    private Integer ff2(List<Integer> collectionH, int w, Integer c) {
+        Integer t = 0;
+
+        if (getRounds() == 3) {
+            t = f2(collectionH.get(4), collectionH.get(2), collectionH.get(1),
+                    collectionH.get(0), collectionH.get(5), collectionH.get(3),
+                    collectionH.get(6));
+        } else if (getRounds() == 4) {
+            t = f2(collectionH.get(3), collectionH.get(5), collectionH.get(2),
+                    collectionH.get(0), collectionH.get(1), collectionH.get(6),
+                    collectionH.get(4));
+        } else {
+            t = f2(collectionH.get(6), collectionH.get(2), collectionH.get(1),
+                    collectionH.get(0), collectionH.get(3), collectionH.get(4),
+                    collectionH.get(5));
+        }
+
+        return (t >>> 7 | t << 25)
+                + (collectionH.get(7) >>> 11 | collectionH.get(7) << 21) + w
+                + c;
+    }
+
     private void fifthPass(int[] xTable, List<Integer> collectionH,
-            List<Integer> constatnts) {
+            List<Integer> constants) {
         // TODO Auto-generated method stub
 
     }
@@ -343,14 +378,16 @@ public class Haval extends BaseHash {
 
         for (int i = 0; i < 4; i++) {
             for (int j = collectionH.size() - 1; j >= 0; j--) {
-                collectionH
-                        .set(j, FF1(rotate(collectionH, 1), xTable[index++]));
+                collectionH.set(
+                        j,
+                        ff1(rotate(collectionH, 1),
+                                xTable[WORD_PROCESING_ORDER_1[index++]]));
             }
         }
     }
 
     private void fourthPass(int[] xTable, List<Integer> collectionH,
-            List<Integer> constatnts) {
+            List<Integer> constants) {
         // TODO Auto-generated method stub
 
     }
@@ -456,10 +493,30 @@ public class Haval extends BaseHash {
         return collection;
     }
 
+    /**
+     * This method makes second pass for haval transformation. constants
+     * 
+     * @param xTable
+     *            the table with information for this algorithm.
+     * @param collectionH
+     *            the data for interim result.
+     * 
+     * @param constants
+     */
     private void secondPass(int[] xTable, List<Integer> collectionH,
-            List<Integer> constatnts) {
-        // TODO Auto-generated method stub
+            List<Integer> constants) {
+        int index = 0;
+        int iterator = 0;
 
+        for (int i = 0; i < 4; i++) {
+            for (int j = collectionH.size() - 1; j >= 0; j--) {
+                collectionH.set(
+                        j,
+                        ff2(rotate(collectionH, 1),
+                                xTable[WORD_PROCESING_ORDER_2[index++]],
+                                constants.get(iterator++)));
+            }
+        }
     }
 
     /**
@@ -483,7 +540,7 @@ public class Haval extends BaseHash {
     }
 
     private void thirdPass(int[] xTable, List<Integer> collectionH,
-            List<Integer> constatnts) {
+            List<Integer> constants) {
         // TODO Auto-generated method stub
 
     }
@@ -524,7 +581,7 @@ public class Haval extends BaseHash {
     protected void transform(byte[] in, int offset) {
         List<Integer> collectionH = Arrays.asList(h0, h1, h2, h3, h4, h5, h6,
                 h7);
-        List<Integer> constatnts = Arrays.asList(0x452821E6, 0x38D01377,
+        List<Integer> constants = Arrays.asList(0x452821E6, 0x38D01377,
                 0xBE5466CF, 0x34E90C6C, 0xC0AC29B7, 0xC97C50DD, 0x3F84D5B5,
                 0xB5470917, 0x9216D5D9, 0x8979FB1B, 0xD1310BA6, 0x98DFB5AC,
                 0x2FFD72DB, 0xD01ADFB7, 0xB8E1AFED, 0x6A267E96, 0xBA7C9045,
@@ -560,12 +617,12 @@ public class Haval extends BaseHash {
         }
 
         firstPass(XTable, collectionH);
-        secondPass(XTable, collectionH, constatnts);
-        thirdPass(XTable, collectionH, constatnts);
+        secondPass(XTable, collectionH, constants);
+        thirdPass(XTable, collectionH, constants);
         if (getRounds() >= 4) {
-            fourthPass(XTable, collectionH, constatnts);
+            fourthPass(XTable, collectionH, constants);
             if (getRounds() == 5) {
-                fifthPass(XTable, collectionH, constatnts);
+                fifthPass(XTable, collectionH, constants);
             }
         }
 
