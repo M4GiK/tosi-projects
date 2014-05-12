@@ -14,6 +14,8 @@ import static com.m4gik.HavalAttributes.HAVAL_NAME;
 import static com.m4gik.HavalAttributes.HAVAL_VERSION;
 import static com.m4gik.HavalAttributes.WORD_PROCESING_ORDER_1;
 import static com.m4gik.HavalAttributes.WORD_PROCESING_ORDER_2;
+import static com.m4gik.HavalAttributes.WORD_PROCESING_ORDER_3;
+import static com.m4gik.HavalAttributes.WORD_PROCESING_ORDER_4;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -399,6 +401,47 @@ public class Haval extends BaseHash {
                 + c;
     }
 
+    /**
+     * Permutations phi_{i,j}, i=3,4,5, j=1,...,i.
+     * 
+     * rounds = 4: 6 5 4 3 2 1 0 (replaced by)phi_{4,4}: 6 4 0 5 2 1 3
+     * 
+     * rounds = 5: 6 5 4 3 2 1 0 (replaced by) phi_{5,4}: 1 5 3 2 0 4 6
+     * 
+     * @param collectionH
+     *            the data for interim result.
+     * @param w
+     *            the extra value to add.
+     * @param c
+     *            the constant value to add.
+     * @return The value for fourth permutation.
+     */
+    private Integer ff4(List<Integer> collectionH, int w, Integer c) {
+        Integer t = 0;
+
+        if (getRounds() == 4) {
+            t = f4(collectionH.get(6), collectionH.get(4), collectionH.get(0),
+                    collectionH.get(5), collectionH.get(2), collectionH.get(1),
+                    collectionH.get(3));
+        } else {
+            t = f4(collectionH.get(1), collectionH.get(5), collectionH.get(3),
+                    collectionH.get(2), collectionH.get(0), collectionH.get(4),
+                    collectionH.get(6));
+        }
+
+        return (t >>> 7 | t << 25)
+                + (collectionH.get(7) >>> 11 | collectionH.get(7) << 21) + w
+                + c;
+    }
+
+    /**
+     * This method makes fifth pass for haval transformation.
+     * 
+     * @param xTable
+     *            the table with information for this algorithm.
+     * @param collectionH
+     *            the data for interim result.
+     */
     private void fifthPass(int[] xTable, List<Integer> collectionH) {
         // TODO Auto-generated method stub
 
@@ -426,8 +469,27 @@ public class Haval extends BaseHash {
         }
     }
 
+    /**
+     * This method makes fourth pass for haval transformation.
+     * 
+     * @param xTable
+     *            the table with information for this algorithm.
+     * @param collectionH
+     *            the data for interim result.
+     */
     private void fourthPass(int[] xTable, List<Integer> collectionH) {
-        // TODO Auto-generated method stub
+        int index = 0;
+        int iterator = 4 * 8 * 2;
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = collectionH.size() - 1; j >= 0; j--) {
+                collectionH.set(
+                        j,
+                        ff4(rotate(collectionH, 1),
+                                xTable[WORD_PROCESING_ORDER_4[index++]],
+                                CONSTANTS.get(iterator++)));
+            }
+        }
 
     }
 
@@ -575,6 +637,14 @@ public class Haval extends BaseHash {
         this.rounds = rounds;
     }
 
+    /**
+     * This method makes third pass for haval transformation.
+     * 
+     * @param xTable
+     *            the table with information for this algorithm.
+     * @param collectionH
+     *            the data for interim result.
+     */
     private void thirdPass(int[] xTable, List<Integer> collectionH) {
         int index = 0;
         int iterator = 4 * 8;
@@ -584,7 +654,7 @@ public class Haval extends BaseHash {
                 collectionH.set(
                         j,
                         ff3(rotate(collectionH, 1),
-                                xTable[WORD_PROCESING_ORDER_2[index++]],
+                                xTable[WORD_PROCESING_ORDER_3[index++]],
                                 CONSTANTS.get(iterator++)));
             }
         }
