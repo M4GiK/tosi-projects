@@ -297,8 +297,10 @@ public class Haval extends BaseHash {
      * 2 0 4 6 phi_{5,5}: 2 5 0 6 4 3 1
      * 
      * @param collectionH
+     *            the data for interim result.
      * @param w
-     * @return
+     *            the extra value to add.
+     * @return The value for first permutation.
      */
     private Integer FF1(List<Integer> collectionH, int w) {
         Integer t = 0;

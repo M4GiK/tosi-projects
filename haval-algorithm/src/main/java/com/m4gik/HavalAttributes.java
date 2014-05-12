@@ -67,4 +67,38 @@ public class HavalAttributes {
      */
     public static final int HAVAL_VERSION = 1;
 
+    /**
+     * Word processing orders for first pass.
+     */
+    public static final int[] WORD_PROCESING_ORDER_1 = { 0, 1, 2, 3, 4, 5, 6,
+            7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+            24, 25, 26, 27, 28, 29, 30, 31 };
+
+    /**
+     * Word processing orders for second pass.
+     */
+    public static final int[] WORD_PROCESING_ORDER_2 = { 5, 14, 26, 18, 11, 28,
+            7, 16, 0, 23, 20, 22, 1, 10, 4, 8, 30, 3, 21, 9, 17, 24, 29, 6, 19,
+            12, 15, 13, 2, 25, 31, 27 };
+
+    /**
+     * Word processing orders for third pass.
+     */
+    public static final int[] WORD_PROCESING_ORDER_3 = { 19, 9, 4, 20, 28, 17,
+            8, 22, 29, 14, 25, 12, 24, 30, 16, 26, 31, 15, 7, 3, 1, 0, 18, 27,
+            13, 6, 21, 10, 23, 11, 5, 2 };
+
+    /**
+     * Word processing orders for fourth pass.
+     */
+    public static final int[] WORD_PROCESING_ORDER_4 = { 24, 4, 0, 14, 2, 7,
+            28, 23, 26, 6, 30, 20, 18, 25, 19, 3, 22, 11, 31, 21, 8, 27, 12, 9,
+            1, 29, 5, 15, 17, 10, 16, 13 };
+
+    /**
+     * Word processing orders for fifth pass.
+     */
+    public static final int[] WORD_PROCESING_ORDER_5 = { 27, 3, 21, 26, 17, 11,
+            20, 29, 19, 0, 12, 7, 13, 8, 31, 10, 5, 9, 14, 30, 18, 6, 28, 24,
+            2, 23, 16, 22, 4, 1, 25, 15 };
 }
