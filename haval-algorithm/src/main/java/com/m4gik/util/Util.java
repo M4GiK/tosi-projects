@@ -22,9 +22,7 @@ public class Util {
      * @throws Exception
      */
     private static String checkHexValue(String hexValue) {
-        try {
-            Long.parseLong(hexValue, 16);
-        } catch (Exception ex) {
+        if (!hexValue.matches("\\A\\b[0-9a-fA-F]+\\b\\Z")) {
             throw new NumberFormatException(
                     "This value is not hexadecimal representation!");
         }

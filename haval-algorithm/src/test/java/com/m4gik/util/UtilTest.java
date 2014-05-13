@@ -52,7 +52,7 @@ public class UtilTest {
         // When
         String hash = Util.toString(haval.digest());
         // Then
-        assertThat(hash, is(equalTo(HASH_RESULT)));
+        assertThat(hash.toLowerCase(), is(equalTo(HASH_RESULT)));
 
     }
 
@@ -61,9 +61,8 @@ public class UtilTest {
         assertThat(input, is(notNullValue()));
     }
 
-    @Test(
-            expected = NumberFormatException.class)
-    public void testThrowIfGivenStingIsNotHexValue() {
+    @Test
+    public void testPositiveScenarioGivenStingIsHexValue() {
         Util.toString((byte[]) input);
     }
 }
