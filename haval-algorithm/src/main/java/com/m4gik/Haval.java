@@ -12,6 +12,14 @@ import static com.m4gik.HavalAttributes.HAVAL_4_ROUND;
 import static com.m4gik.HavalAttributes.HAVAL_5_ROUND;
 import static com.m4gik.HavalAttributes.HAVAL_NAME;
 import static com.m4gik.HavalAttributes.HAVAL_VERSION;
+import static com.m4gik.HavalAttributes.INDEX_0;
+import static com.m4gik.HavalAttributes.INDEX_1;
+import static com.m4gik.HavalAttributes.INDEX_2;
+import static com.m4gik.HavalAttributes.INDEX_3;
+import static com.m4gik.HavalAttributes.INDEX_4;
+import static com.m4gik.HavalAttributes.INDEX_5;
+import static com.m4gik.HavalAttributes.INDEX_6;
+import static com.m4gik.HavalAttributes.INDEX_7;
 import static com.m4gik.HavalAttributes.WORD_PROCESSING_ORDER_1;
 import static com.m4gik.HavalAttributes.WORD_PROCESSING_ORDER_2;
 import static com.m4gik.HavalAttributes.WORD_PROCESSING_ORDER_3;
@@ -307,20 +315,23 @@ public class Haval extends BaseHash {
         Integer t = 0;
 
         if (getRounds() == 3) {
-            t = f1(collectionH.get(1), collectionH.get(0), collectionH.get(3),
-                    collectionH.get(5), collectionH.get(6), collectionH.get(2),
-                    collectionH.get(4));
+            t = f1(collectionH.get(INDEX_1), collectionH.get(INDEX_0),
+                    collectionH.get(INDEX_3), collectionH.get(INDEX_5),
+                    collectionH.get(INDEX_6), collectionH.get(INDEX_2),
+                    collectionH.get(INDEX_4));
         } else if (getRounds() == 4) {
-            t = f1(collectionH.get(2), collectionH.get(6), collectionH.get(1),
-                    collectionH.get(4), collectionH.get(5), collectionH.get(3),
-                    collectionH.get(0));
+            t = f1(collectionH.get(INDEX_2), collectionH.get(INDEX_6),
+                    collectionH.get(INDEX_1), collectionH.get(INDEX_4),
+                    collectionH.get(INDEX_5), collectionH.get(INDEX_3),
+                    collectionH.get(INDEX_0));
         } else {
-            t = f1(collectionH.get(3), collectionH.get(4), collectionH.get(1),
-                    collectionH.get(0), collectionH.get(5), collectionH.get(2),
-                    collectionH.get(6));
+            t = f1(collectionH.get(INDEX_3), collectionH.get(INDEX_4),
+                    collectionH.get(INDEX_1), collectionH.get(INDEX_0),
+                    collectionH.get(INDEX_5), collectionH.get(INDEX_2),
+                    collectionH.get(INDEX_6));
         }
 
-        return lastOperationsOfPermutation(t, collectionH.get(7), w, 0);
+        return lastOperationsOfPermutation(t, collectionH.get(INDEX_7), w, 0);
     }
 
     /**
@@ -344,20 +355,23 @@ public class Haval extends BaseHash {
         Integer t = 0;
 
         if (getRounds() == 3) {
-            t = f2(collectionH.get(4), collectionH.get(2), collectionH.get(1),
-                    collectionH.get(0), collectionH.get(5), collectionH.get(3),
-                    collectionH.get(6));
+            t = f2(collectionH.get(INDEX_4), collectionH.get(INDEX_2),
+                    collectionH.get(INDEX_1), collectionH.get(INDEX_0),
+                    collectionH.get(INDEX_5), collectionH.get(INDEX_3),
+                    collectionH.get(INDEX_6));
         } else if (getRounds() == 4) {
-            t = f2(collectionH.get(3), collectionH.get(5), collectionH.get(2),
-                    collectionH.get(0), collectionH.get(1), collectionH.get(6),
-                    collectionH.get(4));
+            t = f2(collectionH.get(INDEX_3), collectionH.get(INDEX_5),
+                    collectionH.get(INDEX_2), collectionH.get(INDEX_0),
+                    collectionH.get(INDEX_1), collectionH.get(INDEX_6),
+                    collectionH.get(INDEX_4));
         } else {
-            t = f2(collectionH.get(6), collectionH.get(2), collectionH.get(1),
-                    collectionH.get(0), collectionH.get(3), collectionH.get(4),
-                    collectionH.get(5));
+            t = f2(collectionH.get(INDEX_6), collectionH.get(INDEX_2),
+                    collectionH.get(INDEX_1), collectionH.get(INDEX_0),
+                    collectionH.get(INDEX_3), collectionH.get(INDEX_4),
+                    collectionH.get(INDEX_5));
         }
 
-        return lastOperationsOfPermutation(t, collectionH.get(7), w, c);
+        return lastOperationsOfPermutation(t, collectionH.get(INDEX_7), w, c);
     }
 
     /**
@@ -381,20 +395,23 @@ public class Haval extends BaseHash {
         Integer t = 0;
 
         if (getRounds() == 3) {
-            t = f3(collectionH.get(6), collectionH.get(1), collectionH.get(2),
-                    collectionH.get(3), collectionH.get(4), collectionH.get(5),
-                    collectionH.get(0));
+            t = f3(collectionH.get(INDEX_6), collectionH.get(INDEX_1),
+                    collectionH.get(INDEX_2), collectionH.get(INDEX_3),
+                    collectionH.get(INDEX_4), collectionH.get(INDEX_5),
+                    collectionH.get(INDEX_0));
         } else if (getRounds() == 4) {
-            t = f3(collectionH.get(1), collectionH.get(4), collectionH.get(3),
-                    collectionH.get(6), collectionH.get(0), collectionH.get(2),
-                    collectionH.get(5));
+            t = f3(collectionH.get(INDEX_1), collectionH.get(INDEX_4),
+                    collectionH.get(INDEX_3), collectionH.get(INDEX_6),
+                    collectionH.get(INDEX_0), collectionH.get(INDEX_2),
+                    collectionH.get(INDEX_5));
         } else {
-            t = f3(collectionH.get(2), collectionH.get(6), collectionH.get(0),
-                    collectionH.get(4), collectionH.get(3), collectionH.get(1),
-                    collectionH.get(5));
+            t = f3(collectionH.get(INDEX_2), collectionH.get(INDEX_6),
+                    collectionH.get(INDEX_0), collectionH.get(INDEX_4),
+                    collectionH.get(INDEX_3), collectionH.get(INDEX_1),
+                    collectionH.get(INDEX_5));
         }
 
-        return lastOperationsOfPermutation(t, collectionH.get(7), w, c);
+        return lastOperationsOfPermutation(t, collectionH.get(INDEX_7), w, c);
     }
 
     /**
@@ -416,16 +433,18 @@ public class Haval extends BaseHash {
         Integer t = 0;
 
         if (getRounds() == 4) {
-            t = f4(collectionH.get(6), collectionH.get(4), collectionH.get(0),
-                    collectionH.get(5), collectionH.get(2), collectionH.get(1),
-                    collectionH.get(3));
+            t = f4(collectionH.get(INDEX_6), collectionH.get(INDEX_4),
+                    collectionH.get(INDEX_0), collectionH.get(INDEX_5),
+                    collectionH.get(INDEX_2), collectionH.get(INDEX_1),
+                    collectionH.get(INDEX_3));
         } else {
-            t = f4(collectionH.get(1), collectionH.get(5), collectionH.get(3),
-                    collectionH.get(2), collectionH.get(0), collectionH.get(4),
-                    collectionH.get(6));
+            t = f4(collectionH.get(INDEX_1), collectionH.get(INDEX_5),
+                    collectionH.get(INDEX_3), collectionH.get(INDEX_2),
+                    collectionH.get(INDEX_0), collectionH.get(INDEX_4),
+                    collectionH.get(INDEX_6));
         }
 
-        return lastOperationsOfPermutation(t, collectionH.get(7), w, c);
+        return lastOperationsOfPermutation(t, collectionH.get(INDEX_7), w, c);
     }
 
     /**
@@ -442,11 +461,12 @@ public class Haval extends BaseHash {
      * @return The value for fifth permutation.
      */
     private Integer ff5(List<Integer> collectionH, int w, Integer c) {
-        Integer t = f5(collectionH.get(2), collectionH.get(5),
-                collectionH.get(0), collectionH.get(6), collectionH.get(4),
-                collectionH.get(3), collectionH.get(1));
+        Integer t = f5(collectionH.get(INDEX_2), collectionH.get(INDEX_5),
+                collectionH.get(INDEX_0), collectionH.get(INDEX_6),
+                collectionH.get(INDEX_4), collectionH.get(INDEX_3),
+                collectionH.get(INDEX_1));
 
-        return lastOperationsOfPermutation(t, collectionH.get(7), w, c);
+        return lastOperationsOfPermutation(t, collectionH.get(INDEX_7), w, c);
     }
 
     /**
@@ -458,19 +478,15 @@ public class Haval extends BaseHash {
      *            the data for interim result.
      */
     private void fifthPass(int[] xTable, List<Integer> collectionH) {
-        int index = 0;
         int iterator = 4 * 8 * 3;
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = collectionH.size() - 1; j >= 0; j--) {
-                collectionH.set(
-                        j,
-                        ff5(rotate(collectionH, 1),
-                                xTable[WORD_PROCESSING_ORDER_5[index++]],
-                                CONSTANTS.get(iterator++)));
-            }
+        for (int index = 0; index < 4 * collectionH.size(); index++) {
+            collectionH.set(
+                    INDEX_7,
+                    ff5(rotate(collectionH, -1),
+                            xTable[WORD_PROCESSING_ORDER_5[index]],
+                            CONSTANTS.get(iterator++)));
         }
-
     }
 
     /**
@@ -482,16 +498,13 @@ public class Haval extends BaseHash {
      *            the data for interim result.
      */
     private void firstPass(int[] xTable, List<Integer> collectionH) {
-        int index = 0;
         setProperConfiguration(collectionH);
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = collectionH.size() - 1; j >= 0; j--) {
-                collectionH.set(
-                        j,
-                        ff1(rotate(collectionH, 1),
-                                xTable[WORD_PROCESSING_ORDER_1[index++]]));
-            }
+        for (int index = 0; index < 4 * collectionH.size(); index++) {
+            collectionH.set(
+                    INDEX_7,
+                    ff1(rotate(collectionH, -1),
+                            xTable[WORD_PROCESSING_ORDER_1[index]]));
         }
     }
 
@@ -504,19 +517,15 @@ public class Haval extends BaseHash {
      *            the data for interim result.
      */
     private void fourthPass(int[] xTable, List<Integer> collectionH) {
-        int index = 0;
         int iterator = 4 * 8 * 2;
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = collectionH.size() - 1; j >= 0; j--) {
-                collectionH.set(
-                        j,
-                        ff4(rotate(collectionH, 1),
-                                xTable[WORD_PROCESSING_ORDER_4[index++]],
-                                CONSTANTS.get(iterator++)));
-            }
+        for (int index = 0; index < 4 * collectionH.size(); index++) {
+            collectionH.set(
+                    INDEX_7,
+                    ff4(rotate(collectionH, -1),
+                            xTable[WORD_PROCESSING_ORDER_4[index]],
+                            CONSTANTS.get(iterator++)));
         }
-
     }
 
     /**
@@ -707,17 +716,14 @@ public class Haval extends BaseHash {
      *            the data for interim result.
      */
     private void secondPass(int[] xTable, List<Integer> collectionH) {
-        int index = 0;
         int iterator = 0;
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = collectionH.size() - 1; j >= 0; j--) {
-                collectionH.set(
-                        j,
-                        ff2(rotate(collectionH, 1),
-                                xTable[WORD_PROCESSING_ORDER_2[index++]],
-                                CONSTANTS.get(iterator++)));
-            }
+        for (int index = 0; index < 4 * collectionH.size(); index++) {
+            collectionH.set(
+                    INDEX_7,
+                    ff2(rotate(collectionH, -1),
+                            xTable[WORD_PROCESSING_ORDER_2[index]],
+                            CONSTANTS.get(iterator++)));
         }
     }
 
@@ -728,7 +734,8 @@ public class Haval extends BaseHash {
      *            the collection to configuration.
      */
     private void setProperConfiguration(List<Integer> collectionH) {
-        rotate(collectionH, 6);
+        Collections.reverse(collectionH);
+        rotate(collectionH, 1);
     }
 
     /**
@@ -810,17 +817,14 @@ public class Haval extends BaseHash {
      *            the data for interim result.
      */
     private void thirdPass(int[] xTable, List<Integer> collectionH) {
-        int index = 0;
         int iterator = 4 * 8;
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = collectionH.size() - 1; j >= 0; j--) {
-                collectionH.set(
-                        j,
-                        ff3(rotate(collectionH, 1),
-                                xTable[WORD_PROCESSING_ORDER_3[index++]],
-                                CONSTANTS.get(iterator++)));
-            }
+        for (int index = 0; index < 4 * collectionH.size(); index++) {
+            collectionH.set(
+                    INDEX_7,
+                    ff3(rotate(collectionH, -1),
+                            xTable[WORD_PROCESSING_ORDER_3[index]],
+                            CONSTANTS.get(iterator++)));
         }
     }
 
@@ -858,6 +862,16 @@ public class Haval extends BaseHash {
      */
     @Override
     protected synchronized void transform(byte[] in, int offset) {
+
+        // int h0 = 0;
+        // int h1 = 1;
+        // int h2 = 2;
+        // int h3 = 3;
+        // int h4 = 4;
+        // int h5 = 5;
+        // int h6 = 6;
+        // int h7 = 7;
+
         List<Integer> collectionH = Arrays.asList(h0, h1, h2, h3, h4, h5, h6,
                 h7);
         int[] XTable = new int[32];
@@ -877,13 +891,16 @@ public class Haval extends BaseHash {
             }
         }
 
-        h7 += collectionH.get(7);
-        h6 += collectionH.get(6);
-        h5 += collectionH.get(5);
-        h4 += collectionH.get(4);
-        h3 += collectionH.get(3);
-        h2 += collectionH.get(2);
-        h1 += collectionH.get(1);
-        h0 += collectionH.get(0);
+        rotate(collectionH, -1);
+
+        h7 += collectionH.get(INDEX_7);
+        h6 += collectionH.get(INDEX_6);
+        h5 += collectionH.get(INDEX_5);
+        h4 += collectionH.get(INDEX_4);
+        h3 += collectionH.get(INDEX_3);
+        h2 += collectionH.get(INDEX_2);
+        h1 += collectionH.get(INDEX_1);
+        h0 += collectionH.get(INDEX_0);
+
     }
 }

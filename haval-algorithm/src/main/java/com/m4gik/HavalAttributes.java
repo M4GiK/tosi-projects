@@ -102,6 +102,45 @@ public class HavalAttributes {
     public static final int HAVAL_VERSION = 1;
 
     /**
+     * Proper order for get index of reverse collection of h elements.
+     */
+    public static final int INDEX_0 = 7;
+
+    /**
+     * Proper order for get index of reverse collection of h elements.
+     */
+    public static final int INDEX_1 = 6;
+
+    /**
+     * Proper order for get index of reverse collection of h elements.
+     */
+    public static final int INDEX_2 = 5;
+
+    /**
+     * Proper order for get index of reverse collection of h elements.
+     */
+    public static final int INDEX_3 = 4;
+
+    /**
+     * Proper order for get index of reverse collection of h elements.
+     */
+    public static final int INDEX_4 = 3;
+    /**
+     * Proper order for get index of reverse collection of h elements.
+     */
+    public static final int INDEX_5 = 2;
+
+    /**
+     * Proper order for get index of reverse collection of h elements.
+     */
+    public static final int INDEX_6 = 1;
+
+    /**
+     * Proper order for get index of reverse collection of h elements.
+     */
+    public static final int INDEX_7 = 0;
+
+    /**
      * Word processing orders for first pass.
      */
     public static final int[] WORD_PROCESSING_ORDER_1 = { 0, 1, 2, 3, 4, 5, 6,
@@ -111,9 +150,9 @@ public class HavalAttributes {
     /**
      * Word processing orders for second pass.
      */
-    public static final int[] WORD_PROCESSING_ORDER_2 = { 5, 14, 26, 18, 11, 28,
-            7, 16, 0, 23, 20, 22, 1, 10, 4, 8, 30, 3, 21, 9, 17, 24, 29, 6, 19,
-            12, 15, 13, 2, 25, 31, 27 };
+    public static final int[] WORD_PROCESSING_ORDER_2 = { 5, 14, 26, 18, 11,
+            28, 7, 16, 0, 23, 20, 22, 1, 10, 4, 8, 30, 3, 21, 9, 17, 24, 29, 6,
+            19, 12, 15, 13, 2, 25, 31, 27 };
 
     /**
      * Word processing orders for third pass.
@@ -132,7 +171,7 @@ public class HavalAttributes {
     /**
      * Word processing orders for fifth pass.
      */
-    public static final int[] WORD_PROCESSING_ORDER_5 = { 27, 3, 21, 26, 17, 11,
-            20, 29, 19, 0, 12, 7, 13, 8, 31, 10, 5, 9, 14, 30, 18, 6, 28, 24,
-            2, 23, 16, 22, 4, 1, 25, 15 };
+    public static final int[] WORD_PROCESSING_ORDER_5 = { 27, 3, 21, 26, 17,
+            11, 20, 29, 19, 0, 12, 7, 13, 8, 31, 10, 5, 9, 14, 30, 18, 6, 28,
+            24, 2, 23, 16, 22, 4, 1, 25, 15 };
 }
