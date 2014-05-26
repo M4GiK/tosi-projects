@@ -862,16 +862,6 @@ public class Haval extends BaseHash {
      */
     @Override
     protected synchronized void transform(byte[] in, int offset) {
-
-        // int h0 = 0;
-        // int h1 = 1;
-        // int h2 = 2;
-        // int h3 = 3;
-        // int h4 = 4;
-        // int h5 = 5;
-        // int h6 = 6;
-        // int h7 = 7;
-
         List<Integer> collectionH = Arrays.asList(h0, h1, h2, h3, h4, h5, h6,
                 h7);
         int[] XTable = new int[32];
